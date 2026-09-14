@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>提示词口袋</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark">P</span>
+          <span>
+            <strong>提示词口袋</strong>
+            <small>随手存，随时用</small>
+          </span>
+        </div>
+        <button id="settingsButton" class="icon-button" type="button" title="备份与恢复" aria-label="备份与恢复">•••</button>
+      </header>
+
+      <section id="listView" class="view">
+        <label class="search-box">
+          <span aria-hidden="true">⌕</span>
+          <input id="searchInput" type="search" placeholder="搜索标题或内容" autocomplete="off" />
+        </label>
+
+        <div class="section-heading">
+          <h2 id="listTitle">最近使用</h2>
+          <button id="newButton" class="text-button" type="button">＋ 新建</button>
+        </div>
+        <div id="promptList" class="prompt-list"></div>
+        <div id="emptyState" class="empty-state" hidden>
+          <div class="empty-icon">✦</div>
+          <h3>还没有提示词</h3>
+          <p>在网页输入框写好内容后，点击上方“保存”。</p>
+          <button id="emptyNewButton" class="secondary" type="button">手动新建</button>
+        </div>
+      </section>
+
+      <section id="editorView" class="view" hidden>
+        <div class="editor-heading">
+          <button id="editorBackButton" class="back-button" type="button">← 返回</button>
+          <span id="editorModeLabel">编辑提示词</span>
+        </div>
+        <form id="editorForm">
+          <label class="field">
+            <span>标题</span>
+            <input id="titleInput" maxlength="80" placeholder="例如：产品需求分析" required />
+          </label>
+          <label class="field">
+            <span>提示词内容</span>
+            <textarea id="contentInput" rows="11" placeholder="输入要复用的提示词……" required></textarea>
+          </label>
+          <p id="sourceMeta" class="source-meta"></p>
+          <div class="form-actions">
+            <button id="deleteButton" class="danger-text" type="button">删除</button>
+            <button class="primary grow" type="submit">保存</button>
+          </div>
+        </form>
+        <div id="historySection" class="history-section">
+          <div class="section-heading">
+            <h2>历史版本</h2>
+            <span id="versionCount" class="count"></span>
+          </div>
+          <div id="versionList" class="version-list"></div>
+        </div>
+      </section>
+
+      <section id="settingsView" class="view" hidden>
+        <div class="editor-heading">
+          <button id="settingsBackButton" class="back-button" type="button">← 返回</button>
+          <span>数据管理</span>
+        </div>
+        <div class="settings-card">
+          <h2>本地数据</h2>
+          <p>提示词只保存在当前浏览器。建议定期导出备份。</p>
+          <button id="exportButton" class="secondary full" type="button">导出 JSON 备份</button>
+          <button id="importButton" class="secondary full" type="button">导入 JSON 备份</button>
+          <input id="importFile" type="file" accept="application/json,.json" hidden />
+        </div>
+        <div class="settings-card subtle">
+          <strong id="dataSummary">0 条提示词</strong>
+          <p>导入会合并数据；相同 ID 的提示词以更新时间较新的版本为准。</p>
+        </div>
+      </section>
+
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>

@@ -1,0 +1,17 @@
+# Generated release packages
+release/edge-addons-v*/package/
+release/edge-addons-v*/*.zip
+dist/
+versions/
+
+# Local browser/test output
+tests/
+scripts/
+test-results/
+playwright-report/
+
+# Editor and operating-system files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
