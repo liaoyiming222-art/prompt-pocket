@@ -43,6 +43,11 @@
           <button id="editorBackButton" class="back-button" type="button">← 返回</button>
           <span id="editorModeLabel">编辑提示词</span>
         </div>
+        <div id="conflictNotice" class="conflict-notice" hidden role="status">
+          <span id="conflictText"></span>
+          <button id="reloadLatestButton" type="button" class="secondary">载入最新内容</button>
+          <button id="saveDraftCopyButton" type="button" class="secondary">将草稿另存为新提示词</button>
+        </div>
         <form id="editorForm">
           <label class="field">
             <span>标题</span>
@@ -87,6 +92,10 @@
 
       <div id="toast" class="toast" role="status" aria-live="polite"></div>
     </main>
+    <dialog id="versionPreview" aria-labelledby="previewHeading">
+      <header class="preview-heading"><strong id="previewHeading">版本预览</strong><button id="closePreviewButton" type="button" class="secondary">关闭</button></header>
+      <pre id="previewContent"></pre>
+    </dialog>
     <script src="popup.js"></script>
   </body>
 </html>

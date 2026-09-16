@@ -1,0 +1,10 @@
+{
+  "extensionName": {
+    "message": "提示词口袋",
+    "description": "扩展名称"
+  },
+  "extensionDescription": {
+    "message": "保存、搜索、复用提示词，并自动保留历史版本。",
+    "description": "商店与扩展管理页面中的简短说明"
+  }
+}

@@ -24,7 +24,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return;
   }
   const operation = message.action === "get"
-    ? mutationQueue.then(() => handleDataMessage(message))
+    ? mutationQueue.catch(() => {}).then(() => handleDataMessage(message))
     : (mutationQueue = mutationQueue.then(() => handleDataMessage(message), () => handleDataMessage(message)));
   operation
     .then((result) => sendResponse({ ok: true, ...result }))
@@ -35,6 +35,25 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 async function handleDataMessage(message) {
   const stored = await chrome.storage.local.get(STORAGE_KEY);
   const data = normalizeData(stored[STORAGE_KEY]);
+  for (const prompt of data.prompts) ensureVersionNumbers(prompt);
+
+  if (["update", "restore-version", "delete-version", "delete"].includes(message.action) && message.expectedRevision !== undefined) {
+    const prompt = data.prompts.find(item => item.id === message.id);
+    if (!prompt || promptRevision(prompt) !== message.expectedRevision) {
+      throw new Error("此提示词已被其他页面修改或删除。草稿已保留，请先查看最新内容再保存。");
+    }
+  }
+
+  if (message.action === "delete-version") {
+    const prompt = data.prompts.find(item => item.id === message.id);
+    if (!prompt) throw new Error("提示词不存在");
+    if (prompt.currentVersionId === message.versionId) throw new Error("不能删除当前版本");
+    if (!prompt.versions.some(item => item.id === message.versionId)) throw new Error("历史版本不存在");
+    prompt.versions = prompt.versions.filter(item => item.id !== message.versionId);
+    prompt.updatedAt = new Date().toISOString();
+    await chrome.storage.local.set({ [STORAGE_KEY]: data });
+    return { data, prompt };
+  }
 
   if (message.action === "get") return { data };
 
@@ -78,6 +97,7 @@ async function handleDataMessage(message) {
       if (prompt.versions.length >= MAX_VERSIONS_PER_PROMPT) throw new Error("历史版本已达到 100 个上限");
       const version = { id: crypto.randomUUID(), content, createdAt: prompt.updatedAt };
       prompt.versions.push(version);
+      ensureVersionNumbers(prompt);
       prompt.currentVersionId = version.id;
       result = "version";
     }
@@ -93,6 +113,7 @@ async function handleDataMessage(message) {
     const now = new Date().toISOString();
     const restored = { id: crypto.randomUUID(), content: source.content, createdAt: now };
     prompt.versions.push(restored);
+    ensureVersionNumbers(prompt);
     prompt.currentVersionId = restored.id;
     prompt.updatedAt = now;
     await chrome.storage.local.set({ [STORAGE_KEY]: data });
@@ -167,6 +188,19 @@ function normalizeData(value) {
   return value && Array.isArray(value.prompts) ? value : { schemaVersion: 1, prompts: [] };
 }
 
+function ensureVersionNumbers(prompt) {
+  let high = Math.max(Number.isSafeInteger(prompt.versionCounter) ? prompt.versionCounter : 0,
+    ...prompt.versions.map(v => Number.isSafeInteger(v.number) && v.number > 0 ? v.number : 0));
+  for (const version of prompt.versions) {
+    if (!Number.isSafeInteger(version.number) || version.number < 1) version.number = ++high;
+  }
+  prompt.versionCounter = high;
+}
+
+function promptRevision(prompt) {
+  return JSON.stringify([prompt.title, prompt.currentVersionId, prompt.versions.map(v => [v.id, v.content])]);
+}
+
 function authorizeMessage(message, sender) {
   if (sender?.id !== chrome.runtime.id) throw new Error("拒绝未授权的扩展请求");
   // Extension pages opened in a tab also have sender.tab. Trust only our
@@ -205,6 +239,7 @@ function validateData(value) {
       throw new Error("历史版本数量不正确");
     }
     const versionIds = new Set();
+    let previousNumber = 0;
     const versions = prompt.versions.map((version) => {
       const versionId = requiredString(version?.id, 128, "版本 ID");
       if (versionIds.has(versionId)) throw new Error("备份中存在重复的版本 ID");
@@ -214,7 +249,9 @@ function validateData(value) {
       }
       totalContentLength += version.content.length;
       if (totalContentLength > MAX_TOTAL_CONTENT_LENGTH) throw new Error("备份内容总量超过上限");
-      return { id: versionId, content: version.content, createdAt: validDate(version.createdAt, "版本时间") };
+      const number = Number.isSafeInteger(version.number) && version.number > previousNumber ? version.number : previousNumber + 1;
+      previousNumber = number;
+      return { id: versionId, number, content: version.content, createdAt: validDate(version.createdAt, "版本时间") };
     });
     const currentVersionId = typeof prompt.currentVersionId === "string" && versionIds.has(prompt.currentVersionId)
       ? prompt.currentVersionId
@@ -223,6 +260,7 @@ function validateData(value) {
       id,
       title,
       versions,
+      versionCounter: Math.max(previousNumber, Number.isSafeInteger(prompt.versionCounter) ? prompt.versionCounter : 0),
       currentVersionId,
       source: normalizeSource(prompt.source),
       createdAt: validDate(prompt.createdAt, "创建时间"),

@@ -6,6 +6,8 @@
   const STORAGE_KEY = "promptPocketData";
   const POSITION_KEY = "promptPocketWidgetPosition";
   const POSITION_MODEL = "box-v1";
+  let preferredPosition = null;
+  let positionChangeSerial = 0;
   const ORB_SIZE = 52;
   const EDGE_GAP = 8;
   const host = document.createElement("div");
@@ -136,6 +138,7 @@
     if (sidebar) return;
     if (message.action === 'visibility') {
       host.style.display = message.visible ? 'block' : 'none';
+      if (message.visible) keepWidgetInViewport();
       sendResponse({ok:true}); return;
     }
     if (message.action === 'capture') {
@@ -205,6 +208,11 @@
     if (event.key === "Escape") closeTitleDialog();
   });
   chrome.storage.onChanged.addListener((changes, area) => {
+    if (!sidebar && area === "local" && changes[POSITION_KEY]) {
+      positionChangeSerial++;
+      preferredPosition = changes[POSITION_KEY].newValue || null;
+      if (!pointerStart?.moved) keepWidgetInViewport();
+    }
     if (area === "local" && changes[STORAGE_KEY]) {
       data = normalizeData(changes[STORAGE_KEY].newValue);
       render();
@@ -556,25 +564,10 @@
   }
 
   async function restorePosition() {
+    const serial = positionChangeSerial;
     const stored = await chrome.storage.local.get(POSITION_KEY);
-    const position = stored[POSITION_KEY];
-    if (!position) return;
-    let x = Number(position.x);
-    let y = Number(position.y);
-    if (!Number.isFinite(x) || !Number.isFinite(y)) {
-      await chrome.storage.local.remove(POSITION_KEY);
-      return;
-    }
-    if (position.model !== POSITION_MODEL) {
-      x -= ORB_SIZE;
-      y -= ORB_SIZE;
-    }
-    host.style.right = "auto";
-    host.style.bottom = "auto";
-    const migrated = setHostPosition(x, y);
-    await chrome.storage.local.set({
-      [POSITION_KEY]: { ...migrated, model: POSITION_MODEL },
-    });
+    if (serial === positionChangeSerial) preferredPosition = stored[POSITION_KEY] || null;
+    keepWidgetInViewport();
   }
 
   function setHostPosition(x, y) {
@@ -586,22 +579,38 @@
     };
     host.style.left = `${next.x}px`;
     host.style.top = `${next.y}px`;
+    host.style.right = "auto";
+    host.style.bottom = "auto";
     return next;
   }
 
   async function savePosition() {
     const rect = host.getBoundingClientRect();
+    const right = innerWidth - rect.right, bottom = innerHeight - rect.bottom;
+    preferredPosition = {
+      model: "edge-v2",
+      horizontal: rect.left <= right ? "left" : "right",
+      vertical: rect.top <= bottom ? "top" : "bottom",
+      x: Math.max(EDGE_GAP, Math.min(rect.left, right)),
+      y: Math.max(EDGE_GAP, Math.min(rect.top, bottom)),
+    };
     await chrome.storage.local.set({
-      [POSITION_KEY]: { x: rect.left, y: rect.top, model: POSITION_MODEL },
+      [POSITION_KEY]: preferredPosition,
     });
   }
 
   function keepWidgetInViewport() {
-    if (host.style.display === "none") return;
-    const rect = host.getBoundingClientRect();
-    host.style.right = "auto";
-    host.style.bottom = "auto";
-    setHostPosition(rect.left, rect.top);
+    if (sidebar) return;
+    const position = preferredPosition;
+    if (!position || !Number.isFinite(position.x) || !Number.isFinite(position.y)) {
+      setHostPosition(innerWidth - ORB_SIZE - 22, innerHeight - ORB_SIZE - 24);
+    } else if (position.model === "edge-v2") {
+      setHostPosition(position.horizontal === "right" ? innerWidth - ORB_SIZE - position.x : position.x,
+        position.vertical === "bottom" ? innerHeight - ORB_SIZE - position.y : position.y);
+    } else {
+      const offset = position.model === POSITION_MODEL ? 0 : ORB_SIZE;
+      setHostPosition(position.x - offset, position.y - offset);
+    }
   }
 
   function enableDragging() {
@@ -626,5 +635,6 @@
       if (moved) await savePosition();
       setTimeout(() => { pointerStart = null; }, 0);
     });
+    ui.orb.addEventListener("pointercancel", () => { pointerStart = null; keepWidgetInViewport(); });
   }
 })();

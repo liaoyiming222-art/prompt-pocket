@@ -1,8 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "提示词口袋",
-  "version": "0.6.1",
-  "description": "保存、搜索、复用提示词，并自动保留历史版本。",
+  "name": "__MSG_extensionName__",
+  "version": "0.6.3",
+  "default_locale": "zh_CN",
+  "description": "__MSG_extensionDescription__",
   "icons": {
     "16": "icons/icon-16.png",
     "32": "icons/icon-32.png",

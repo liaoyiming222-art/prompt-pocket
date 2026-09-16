@@ -6,6 +6,10 @@ const state = {
   editingId: null,
   sourceForNewPrompt: null,
   standalone: false,
+  baseline: null,
+  revision: null,
+  busy: false,
+  conflict: false,
 };
 
 const $ = (id) => document.getElementById(id);
@@ -34,6 +38,59 @@ function handleStorageChange(changes, area) {
   if (!Array.isArray(value.prompts)) return;
   state.data = value;
   if (!els.listView.hidden) renderList();
+  if (!els.editorView.hidden && state.editingId && !state.busy) syncEditor();
+}
+
+function revision(prompt) {
+  return JSON.stringify([prompt.title, prompt.currentVersionId, prompt.versions.map(v => [v.id, v.content])]);
+}
+function dirty() {
+  return !els.editorView.hidden && state.baseline &&
+    (els.titleInput.value !== state.baseline.title || els.contentInput.value !== state.baseline.content);
+}
+function mayLeave() {
+  if (state.busy) return false;
+  return !dirty() || confirm("有未保存的修改，确定放弃这些修改吗？");
+}
+function adopt(prompt) {
+  els.titleInput.value = prompt.title;
+  els.contentInput.value = currentVersion(prompt).content;
+  state.baseline = {title: els.titleInput.value, content: els.contentInput.value};
+  state.revision = revision(prompt);
+  state.conflict = false;
+  $("conflictNotice").hidden = true;
+  renderVersions(prompt);
+}
+function syncEditor() {
+  const prompt = state.data.prompts.find(p => p.id === state.editingId);
+  if (prompt && revision(prompt) === state.revision) { renderVersions(prompt); return; }
+  if (prompt && !dirty() && !state.conflict) { adopt(prompt); return; }
+  state.conflict = true;
+  $("conflictNotice").hidden = false;
+  $("conflictText").textContent = prompt
+    ? "其他页面已修改此提示词。你的草稿已保留；请载入最新内容，或将草稿另存为新提示词。"
+    : "此提示词已在其他页面删除。你的草稿已保留，可另存为新提示词。";
+  $("reloadLatestButton").disabled = !prompt;
+  if (prompt) renderVersions(prompt);
+  else { els.versionList.replaceChildren(); els.versionCount.textContent = "已删除"; }
+}
+async function mutate(action, payload) {
+  if (state.busy) return null;
+  state.busy = true;
+  const controls = [...document.querySelectorAll('button, input, textarea')];
+  const disabled = controls.map(el => el.disabled);
+  controls.forEach(el => { el.disabled = true; });
+  let response;
+  try {
+    response = await request(action, payload);
+    if (!response.ok) { toast(response.error || "操作失败"); await loadData(); }
+    else state.data = response.data;
+  } finally {
+    state.busy = false;
+    controls.forEach((el, i) => { el.disabled = disabled[i]; });
+  }
+  if (!response?.ok && state.editingId) syncEditor();
+  return response?.ok ? response : null;
 }
 
 function bindEvents() {
@@ -48,6 +105,21 @@ function bindEvents() {
   $("importButton").addEventListener("click", () => $("importFile").click());
   $("importFile").addEventListener("change", importData);
   els.searchInput.addEventListener("input", renderList);
+  window.addEventListener("beforeunload", event => {
+    if (dirty() || state.busy) { event.preventDefault(); event.returnValue = ""; }
+  });
+  $("closePreviewButton").addEventListener("click", () => $("versionPreview").close());
+  $("reloadLatestButton").addEventListener("click", () => {
+    if (!mayLeave()) return;
+    const prompt = state.data.prompts.find(p => p.id === state.editingId);
+    if (prompt) adopt(prompt);
+  });
+  $("saveDraftCopyButton").addEventListener("click", async () => {
+    const title = els.titleInput.value.trim(), content = els.contentInput.value.trim();
+    if (!title || !content) return toast("请填写标题和提示词内容");
+    const response = await mutate("create", {title, content});
+    if (response) { state.baseline = null; showList(); toast("草稿已另存为新提示词"); }
+  });
 }
 
 async function loadData() {
@@ -61,6 +133,7 @@ function showView(target) {
 }
 
 function showList() {
+  if (!mayLeave()) return;
   showView(els.listView);
   state.editingId = null;
   state.sourceForNewPrompt = null;
@@ -68,6 +141,7 @@ function showList() {
 }
 
 function showSettings() {
+  if (!mayLeave()) return;
   showView(els.settingsView);
   const versions = state.data.prompts.reduce((total, prompt) => total + prompt.versions.length, 0);
   els.dataSummary.textContent = `${state.data.prompts.length} 条提示词 · ${versions} 个版本`;
@@ -128,7 +202,7 @@ function miniButton(label, title, handler) {
   const button = document.createElement("button");
   button.type = "button";
   button.className = "mini-button";
-  button.textContent = label === "复制" ? "拷" : "改";
+  button.textContent = label;
   button.title = title;
   button.setAttribute("aria-label", label);
   button.addEventListener("click", handler);
@@ -136,12 +210,17 @@ function miniButton(label, title, handler) {
 }
 
 function openEditor(id = null, seed = {}) {
+  if (!mayLeave()) return;
   state.editingId = id;
   const prompt = id ? state.data.prompts.find((item) => item.id === id) : null;
   const version = prompt ? currentVersion(prompt) : null;
   els.editorModeLabel.textContent = prompt ? "编辑提示词" : "新建提示词";
   els.titleInput.value = prompt?.title || seed.title || "";
   els.contentInput.value = version?.content || seed.content || "";
+  state.baseline = {title: els.titleInput.value, content: els.contentInput.value};
+  state.revision = prompt ? revision(prompt) : null;
+  state.conflict = false;
+  $("conflictNotice").hidden = true;
   els.deleteButton.hidden = !prompt;
   els.historySection.hidden = !prompt;
   const source = prompt?.source || state.sourceForNewPrompt;
@@ -161,7 +240,7 @@ function renderVersions(prompt) {
     const copy = document.createElement("div");
     copy.className = "version-copy";
     const label = document.createElement("strong");
-    label.textContent = `V${prompt.versions.length - index} · ${formatDate(version.createdAt)}`;
+    label.textContent = `V${version.number || prompt.versions.length - index} · ${formatDate(version.createdAt)}`;
     const preview = document.createElement("span");
     preview.textContent = version.content.replace(/\s+/g, " ");
     copy.append(label, preview);
@@ -169,55 +248,77 @@ function renderVersions(prompt) {
       const current = document.createElement("span");
       current.className = "version-current";
       current.textContent = "当前版本";
-      row.append(copy, current);
-    } else {
-      const restore = document.createElement("button");
-      restore.className = "restore-button";
-      restore.type = "button";
-      restore.textContent = "恢复";
-      restore.addEventListener("click", () => restoreVersion(prompt.id, version.id));
-      row.append(copy, restore);
+      copy.append(current);
     }
+    const actions = document.createElement("div");
+    actions.className = "version-actions";
+    const isCurrent = version.id === prompt.currentVersionId;
+    const restore = miniButton("恢复", isCurrent ? "已是当前版本" : "恢复此版本", () => restoreVersion(prompt.id, version.id));
+    const remove = miniButton("删除", isCurrent ? "不能删除当前版本" : "删除此历史版本", () => deleteVersion(prompt.id, version.id));
+    restore.disabled = isCurrent || state.conflict || state.busy;
+    remove.disabled = isCurrent || state.conflict || state.busy;
+    const previewButton = miniButton("预览", "查看完整正文", () => {
+      $("previewHeading").textContent = `${prompt.title} · ${label.textContent}`;
+      $("previewContent").textContent = version.content;
+      $("versionPreview").showModal();
+    });
+    actions.append(restore, remove, previewButton);
+    row.append(copy, actions);
     els.versionList.append(row);
   });
 }
 
 async function saveEditor(event) {
   event.preventDefault();
+  if (state.busy) return;
+  if (state.conflict) return toast("请先处理其他页面的修改，或将草稿另存");
   const title = els.titleInput.value.trim();
   const content = els.contentInput.value.trim();
   if (!title || !content) return toast("请填写标题和提示词内容");
   if (state.editingId) {
-    const response = await request("update", { id: state.editingId, title, content });
-    if (!response.ok) return toast(response.error || "保存失败");
+    const response = await mutate("update", { id: state.editingId, title, content, expectedRevision: state.revision });
+    if (!response) return;
     state.data = response.data;
     toast(response.result === "version" ? "已保存为新版本" : "已保存");
   } else {
-    const response = await request("create", { title, content, source: state.sourceForNewPrompt });
-    if (!response.ok) return toast(response.error || "保存失败");
+    const response = await mutate("create", { title, content, source: state.sourceForNewPrompt });
+    if (!response) return;
     state.data = response.data;
     toast("提示词已保存");
   }
-  setTimeout(showList, 350);
+  state.baseline = null;
+  showList();
 }
 
 async function restoreVersion(promptId, versionId) {
-  const response = await request("restore-version", { id: promptId, versionId });
-  if (!response.ok) return toast(response.error || "恢复失败");
+  if (state.busy || state.conflict) return;
+  if (dirty() && !confirm("恢复将放弃当前未保存的修改，是否继续？")) return;
+  const response = await mutate("restore-version", { id: promptId, versionId, expectedRevision: state.revision });
+  if (!response) return;
   state.data = response.data;
-  els.contentInput.value = currentVersion(response.prompt).content;
-  renderVersions(response.prompt);
+  adopt(response.prompt);
   toast("已恢复，并保留为新版本");
 }
 
+async function deleteVersion(promptId, versionId) {
+  if (state.busy || state.conflict || !confirm("确定删除此历史版本吗？删除后无法恢复。")) return;
+  const response = await mutate("delete-version", {id: promptId, versionId, expectedRevision: state.revision});
+  if (!response) return;
+  state.revision = revision(response.prompt);
+  renderVersions(response.prompt);
+  toast("历史版本已删除");
+}
+
 async function deleteCurrentPrompt() {
+  if (state.busy || state.conflict) return;
   const prompt = state.data.prompts.find((item) => item.id === state.editingId);
   if (!prompt || !confirm(`确定删除“${prompt.title}”及其全部版本吗？`)) return;
-  const response = await request("delete", { id: prompt.id });
-  if (!response.ok) return toast(response.error || "删除失败");
+  const response = await mutate("delete", { id: prompt.id, expectedRevision: state.revision });
+  if (!response) return;
   state.data = response.data;
   toast("已删除");
-  setTimeout(showList, 250);
+  state.baseline = null;
+  showList();
 }
 
 async function request(action, payload = {}) {
