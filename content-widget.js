@@ -67,6 +67,17 @@
       .toast.show { opacity: 1; transform: translate(-50%,0); }
       .title-modal { position: absolute; inset: 0; z-index: 10; display: grid; place-items: center; padding: 18px; background: rgba(28,32,48,.42); backdrop-filter: blur(2px); }
       .title-modal[hidden] { display: none; }
+      .reader { position: absolute; inset: 55px 0 0; z-index: 5; padding: 16px; display: flex; flex-direction: column; gap: 12px; background: white; }
+      .reader[hidden] { display: none; }
+      .reader-head { display: flex; align-items: flex-start; gap: 12px; }
+      .reader-heading { flex: 1; min-width: 0; margin: 0; overflow-wrap: anywhere; font-size: 14px; }
+      .reader-close { flex-shrink: 0; font-size: 22px; width: 32px; padding: 0; }
+      .reader-content { flex: 1; min-height: 0; margin: 0; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; font-size: 13px; line-height: 1.7; }
+      .reader-footer { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 12px; color: #72798a; }
+      .reader-copy { min-height: 36px; padding: 0 18px; border: 0; border-radius: 8px; background: #6c5ce7; color: white; }
+      .item { display: flex; align-items: center; gap: 10px; padding: 10px; }
+      .insert { flex: 1; min-width: 0; }
+      .tools { position: static; flex: 0 0 auto; transform: none; }
       .title-dialog { width: 100%; padding: 18px; border-radius: 14px; background: white; box-shadow: 0 18px 45px rgba(29,36,51,.3); }
       .title-dialog h3 { margin: 0 0 13px; color: #252b3b; font-size: 15px; }
       .title-input { width: 100%; height: 40px; padding: 0 11px; border: 1px solid #dfe1e8; border-radius: 9px; outline: 0; color: #1d2433; background: #f8f8fb; font-size: 13px; }
@@ -94,6 +105,11 @@
           <div class="label"><span>提示词</span><span class="count"></span></div>
           <div class="list"></div>
         </div>
+        <section class="reader" hidden aria-labelledby="readerHeading">
+          <header class="reader-head"><h2 id="readerHeading" class="reader-heading"></h2><button class="tool reader-close" type="button" title="关闭预览" aria-label="关闭预览">×</button></header>
+          <pre class="reader-content" tabindex="0"></pre>
+          <footer class="reader-footer"><span class="reader-feedback" role="status"></span><button class="reader-copy" type="button">复制</button></footer>
+        </section>
         <div class="toast"></div>
         <div class="title-modal" hidden>
           <form class="title-dialog">
@@ -126,6 +142,27 @@
     ui.panel.classList.add('open');
   }
   let data = { schemaVersion: 1, prompts: [] };
+  const reader = root.querySelector('.reader');
+  const readerContent = root.querySelector('.reader-content');
+  const readerClose = root.querySelector('.reader-close');
+  let readerTrigger = null;
+  function closeReader() {
+    reader.hidden = true;
+    root.querySelector('.body').inert = false;
+    (readerTrigger?.isConnected ? readerTrigger : ui.search).focus({preventScroll:true});
+  }
+  readerClose.addEventListener('click', closeReader);
+  reader.addEventListener('keydown', event => {
+    if (event.key === 'Escape') { event.preventDefault(); closeReader(); }
+  });
+  root.querySelector('.reader-copy').addEventListener('click', async () => {
+    const button = root.querySelector('.reader-copy');
+    button.disabled = true;
+    try {
+      const copied = await copyText(readerContent.textContent);
+      root.querySelector('.reader-feedback').textContent = copied ? '已复制' : '复制失败，请重试';
+    } finally { button.disabled = false; }
+  });
   let lastEditable = isEditable(document.activeElement) ? document.activeElement : null;
   let lastInputContent = lastEditable ? readValue(lastEditable) : "";
   let toastTimer;
@@ -321,6 +358,7 @@
   }
 
   function render() {
+    const savedScroll = ui.list.scrollTop;
     const query = ui.search.value.trim().toLocaleLowerCase();
     const prompts = [...data.prompts]
       .filter((prompt) => {
@@ -338,6 +376,7 @@
       return;
     }
     prompts.forEach((prompt) => ui.list.append(createItem(prompt)));
+    if (!reader.hidden) ui.list.scrollTop = savedScroll;
   }
 
   function createItem(prompt) {
@@ -380,7 +419,21 @@
       render();
       showToast("已删除");
     });
-    tools.append(copy, remove);
+    const view = document.createElement('button');
+    view.className = 'tool';
+    view.type = 'button';
+    view.textContent = '预览';
+    view.addEventListener('click', () => {
+      readerTrigger = view;
+      root.querySelector('.reader-heading').textContent = prompt.title;
+      readerContent.textContent = version.content;
+      root.querySelector('.reader-feedback').textContent = '';
+      reader.hidden = false;
+      root.querySelector('.body').inert = true;
+      readerContent.scrollTop = 0;
+      readerClose.focus({preventScroll:true});
+    });
+    tools.append(view, copy, remove);
     item.append(insert, tools);
     return item;
   }
