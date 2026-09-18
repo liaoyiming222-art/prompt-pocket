@@ -9,13 +9,13 @@
   <body>
     <main class="app">
       <header class="topbar">
-        <div class="brand">
+        <button id="homeButton" class="brand" type="button" title="返回提示词首页" aria-label="提示词口袋，返回首页">
           <span class="brand-mark">P</span>
           <span>
             <strong>提示词口袋</strong>
             <small>随手存，随时用</small>
           </span>
-        </div>
+        </button>
         <button id="settingsButton" class="icon-button" type="button" title="备份与恢复" aria-label="备份与恢复">•••</button>
       </header>
 
@@ -93,8 +93,10 @@
       <div id="toast" class="toast" role="status" aria-live="polite"></div>
     </main>
     <dialog id="versionPreview" aria-labelledby="previewHeading">
-      <header class="preview-heading"><strong id="previewHeading">版本预览</strong><button id="closePreviewButton" type="button" class="secondary">关闭</button></header>
-      <pre id="previewContent"></pre>
+      <header class="preview-heading"><strong id="previewHeading">版本预览</strong><button id="closePreviewButton" type="button" class="secondary" title="关闭预览" aria-label="关闭预览">×</button></header>
+      <textarea id="previewContent" aria-label="版本正文"></textarea>
+      <span id="previewFeedback" role="status"></span>
+      <footer class="preview-footer"><button id="deletePreviewButton" type="button" class="danger-text">删除</button><div class="preview-actions"><button id="copyPreviewButton" type="button" class="secondary">复制</button><button id="restorePreviewButton" type="button" class="secondary">恢复</button><button id="savePreviewButton" type="button" class="primary">保存</button></div></footer>
     </dialog>
     <script src="popup.js"></script>
   </body>

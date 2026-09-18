@@ -85,7 +85,6 @@
           <div class="head-actions">
             <button class="head-btn manage" title="打开完整管理页">管理</button>
             <button class="head-btn minimize" title="收起窗口" aria-label="收起窗口">—</button>
-            <button class="head-btn close" title="关闭悬浮助手" aria-label="关闭悬浮助手">×</button>
           </div>
         </header>
         <div class="body">
@@ -115,14 +114,14 @@
     panel: root.querySelector(".panel"), orb: root.querySelector(".orb"), draft: root.querySelector(".draft"),
     save: root.querySelector(".save"), search: root.querySelector(".search"), list: root.querySelector(".list"),
     count: root.querySelector(".count"), hint: root.querySelector(".hint"), toast: root.querySelector(".toast"),
-    minimize: root.querySelector(".minimize"), close: root.querySelector(".close"), manage: root.querySelector(".manage"), reread: root.querySelector(".reread"),
+    minimize: root.querySelector(".minimize"), manage: root.querySelector(".manage"), reread: root.querySelector(".reread"),
     titleModal: root.querySelector(".title-modal"), titleForm: root.querySelector(".title-dialog"), titleInput: root.querySelector(".title-input"),
     titleCancel: root.querySelector(".title-cancel"), titleSkip: root.querySelector(".title-skip"),
   };
   if (sidebar) {
     host.style.cssText = 'display:block;width:100%;min-height:100vh';
     const style = document.createElement('style');
-    style.textContent = '.wrap{width:100%;height:100vh}.orb{display:none}.panel,.panel.open{position:relative;inset:auto;width:100%;height:100vh;max-height:none;border:0;border-radius:0;box-shadow:none;opacity:1;pointer-events:auto;transform:none;display:flex;flex-direction:column}.body{flex:1;min-height:0;display:flex;flex-direction:column}.list{max-height:none;flex:1;overflow:auto;align-content:start}.head{flex-shrink:0}.head-actions{gap:3px}.head-btn{padding:0 6px}.save-box textarea{min-width:0}.title-modal{position:fixed}';
+    style.textContent = '.wrap{width:100%;height:100vh}.orb{display:none}.panel,.panel.open{position:relative;inset:auto;width:100%;height:100vh;max-height:none;border:0;border-radius:0;box-shadow:none;opacity:1;pointer-events:auto;transform:none;display:flex;flex-direction:column}.body{flex:1;min-height:0;display:flex;flex-direction:column}.list{max-height:none;flex:1;overflow:auto;align-content:start}.head{flex-shrink:0}.head-actions{gap:6px}.head-btn{width:44px;height:32px;padding:0;flex-shrink:0}.save-box textarea{min-width:0}.title-modal{position:fixed}';
     root.append(style);
     ui.panel.classList.add('open');
   }
@@ -190,7 +189,6 @@
     if (!response.ok) { ui.orb.title = '无法打开侧边栏：' + response.error; }
   });
   ui.minimize.addEventListener("click", closePanel);
-  ui.close.addEventListener("click", closeWidget);
   ui.manage.addEventListener("click", async () => {
     const response = await sendDataMessage("open-manager");
     if (!response.ok) showToast(response.error || "无法打开管理窗口");
@@ -537,13 +535,6 @@
     ui.orb.classList.remove("open");
   }
 
-  function closeWidget() {
-    if (sidebar) {
-      sidebarRequest('close', {dismiss:true}).then(result => { if (!result.ok) showToast(result.error); }); return;
-    }
-    closePanel();
-    host.style.display = "none";
-  }
 
   function alignPanel() {
     const rect = host.getBoundingClientRect();

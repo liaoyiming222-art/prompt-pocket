@@ -10,6 +10,7 @@ const state = {
   revision: null,
   busy: false,
   conflict: false,
+  preview: null,
 };
 
 const $ = (id) => document.getElementById(id);
@@ -37,6 +38,7 @@ function handleStorageChange(changes, area) {
   const value = changes[STORAGE_KEY].newValue;
   if (!Array.isArray(value.prompts)) return;
   state.data = value;
+  if (state.preview && !state.busy) syncPreview();
   if (!els.listView.hidden) renderList();
   if (!els.editorView.hidden && state.editingId && !state.busy) syncEditor();
 }
@@ -94,6 +96,15 @@ async function mutate(action, payload) {
 }
 
 function bindEvents() {
+  $("homeButton").addEventListener("click", () => {
+    if (!mayLeave()) return;
+    els.searchInput.value = "";
+    showView(els.listView);
+    state.editingId = null;
+    state.sourceForNewPrompt = null;
+    renderList();
+    window.scrollTo({ top: 0 });
+  });
   $("settingsButton").addEventListener("click", showSettings);
   $("settingsBackButton").addEventListener("click", showList);
   $("editorBackButton").addEventListener("click", showList);
@@ -106,9 +117,33 @@ function bindEvents() {
   $("importFile").addEventListener("change", importData);
   els.searchInput.addEventListener("input", renderList);
   window.addEventListener("beforeunload", event => {
-    if (dirty() || state.busy) { event.preventDefault(); event.returnValue = ""; }
+    if (dirty() || previewDirty() || state.busy) { event.preventDefault(); event.returnValue = ""; }
   });
-  $("closePreviewButton").addEventListener("click", () => $("versionPreview").close());
+  $("closePreviewButton").addEventListener("click", closePreview);
+  $("versionPreview").addEventListener("cancel", event => { event.preventDefault(); closePreview(); });
+  $("versionPreview").addEventListener("close", () => { state.preview = null; });
+  $("previewContent").addEventListener("input", syncPreview);
+  $("savePreviewButton").addEventListener("click", savePreview);
+  $("restorePreviewButton").addEventListener("click", async () => {
+    if (!previewReady()) return;
+    const response = await restoreVersion(state.preview.promptId, state.preview.versionId);
+    if (response) $("versionPreview").close();
+  });
+  $("deletePreviewButton").addEventListener("click", async () => {
+    if (!previewReady()) return;
+    const response = await deleteVersion(state.preview.promptId, state.preview.versionId);
+    if (response) $("versionPreview").close();
+  });
+  $("copyPreviewButton").addEventListener("click", async () => {
+    const button = $("copyPreviewButton");
+    button.disabled = true;
+    try {
+      await navigator.clipboard.writeText($("previewContent").value);
+      $("previewFeedback").textContent = "已复制";
+    } catch {
+      $("previewFeedback").textContent = "复制失败，请重试";
+    } finally { button.disabled = false; }
+  });
   $("reloadLatestButton").addEventListener("click", () => {
     if (!mayLeave()) return;
     const prompt = state.data.prompts.find(p => p.id === state.editingId);
@@ -258,14 +293,66 @@ function renderVersions(prompt) {
     restore.disabled = isCurrent || state.conflict || state.busy;
     remove.disabled = isCurrent || state.conflict || state.busy;
     const previewButton = miniButton("预览", "查看完整正文", () => {
-      $("previewHeading").textContent = `${prompt.title} · ${label.textContent}`;
-      $("previewContent").textContent = version.content;
+      state.preview = {promptId: prompt.id, versionId: version.id, original: version.content, revision: revision(prompt)};
+      $("previewHeading").textContent = `查看与编辑版本 · ${prompt.title} · ${label.textContent}`;
+      $("previewContent").value = version.content;
+      $("previewFeedback").textContent = "";
+      syncPreview();
       $("versionPreview").showModal();
     });
     actions.append(restore, remove, previewButton);
     row.append(copy, actions);
     els.versionList.append(row);
   });
+}
+
+function previewDirty() {
+  return state.preview && $("versionPreview").open && $("previewContent").value !== state.preview.original;
+}
+function closePreview() {
+  if (state.busy || (previewDirty() && !confirm("有未保存的修改，确定放弃这些修改吗？"))) return;
+  $("versionPreview").close();
+}
+function previewReady() {
+  const preview = state.preview;
+  const prompt = state.data.prompts.find(p => p.id === preview?.promptId);
+  if (state.busy || !preview || !prompt || revision(prompt) !== preview.revision || state.conflict) {
+    $("previewFeedback").textContent = "此提示词已更新或删除。草稿已保留，可复制后关闭窗口，处理最新内容再操作。";
+    return false;
+  }
+  return true;
+}
+function syncPreview() {
+  const preview = state.preview;
+  if (!preview) return;
+  const prompt = state.data.prompts.find(p => p.id === preview.promptId);
+  const stale = !prompt || revision(prompt) !== preview.revision;
+  const current = prompt?.currentVersionId === preview.versionId;
+  $("deletePreviewButton").disabled = stale || current || state.conflict;
+  $("restorePreviewButton").disabled = stale || current || state.conflict;
+  $("savePreviewButton").disabled = stale || state.conflict || !previewDirty();
+  if (stale) $("previewFeedback").textContent = "此提示词已更新或删除。草稿已保留，请复制后处理最新内容。";
+}
+async function savePreview() {
+  if (!previewReady() || !previewDirty()) return;
+  const content = $("previewContent").value.trim();
+  if (!content) { $("previewFeedback").textContent = "请填写提示词内容"; return; }
+  if (dirty() && !confirm("主编辑页有未保存的修改，保存此版本将替换这些修改，是否继续？")) return;
+  const preview = state.preview;
+  const prompt = state.data.prompts.find(p => p.id === preview.promptId);
+  const response = await mutate("update", {id: prompt.id, title: prompt.title, content, expectedRevision: preview.revision});
+  if (!response) {
+    $("previewFeedback").textContent = "保存失败，草稿已保留，请检查是否有其他页面更新。";
+    syncPreview();
+    return;
+  }
+  adopt(response.prompt);
+  const version = currentVersion(response.prompt);
+  state.preview = {promptId: prompt.id, versionId: version.id, original: version.content, revision: revision(response.prompt)};
+  $("previewContent").value = version.content;
+  $("previewHeading").textContent = `查看与编辑版本 · ${response.prompt.title} · V${version.number} · ${formatDate(version.createdAt)}`;
+  $("previewFeedback").textContent = response.result === "version" ? "已保存为最新版" : "已保存，正文与最新版相同，未新增版本";
+  syncPreview();
 }
 
 async function saveEditor(event) {
@@ -298,6 +385,7 @@ async function restoreVersion(promptId, versionId) {
   state.data = response.data;
   adopt(response.prompt);
   toast("已恢复，并保留为新版本");
+  return response;
 }
 
 async function deleteVersion(promptId, versionId) {
@@ -307,6 +395,7 @@ async function deleteVersion(promptId, versionId) {
   state.revision = revision(response.prompt);
   renderVersions(response.prompt);
   toast("历史版本已删除");
+  return response;
 }
 
 async function deleteCurrentPrompt() {

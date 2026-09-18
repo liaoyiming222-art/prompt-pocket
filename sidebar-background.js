@@ -1,21 +1,39 @@
 // Window-scoped visibility survives service worker suspension.
 const panelKey = windowId => `promptPocketPanel:${windowId}`;
-const closedTabs = new Set();
-chrome.action.onClicked.addListener(tab => { closedTabs.delete(tab.id); });
+const dismissedKey = id => `promptPocketDismissed:${id}`;
+const minimizeKey = id => `promptPocketMinimizing:${id}`;
+async function orbVisible(id) {
+  const state = await chrome.storage.session.get([panelKey(id), dismissedKey(id)]);
+  return !state[panelKey(id)] && !state[dismissedKey(id)];
+}
+async function resumeWidget(id) {
+  await chrome.storage.session.remove(dismissedKey(id));
+  await setPanelVisible(id, await panelVisible(id));
+}
 async function panelVisible(windowId) {
   return Boolean((await chrome.storage.session.get(panelKey(windowId)))[panelKey(windowId)]);
 }
 async function setPanelVisible(windowId, visible) {
   await chrome.storage.session.set({ [panelKey(windowId)]: visible });
+  const showOrb = await orbVisible(windowId);
   const tabs = await chrome.tabs.query({ windowId });
   await Promise.all(tabs.map(tab => chrome.tabs.sendMessage(tab.id, {
-    channel: "prompt-pocket-control", action: "visibility", visible: !visible && !closedTabs.has(tab.id),
+    channel: "prompt-pocket-control", action: "visibility", visible: showOrb,
   }).catch(() => {})));
 }
-chrome.sidePanel.onOpened?.addListener(({ windowId }) => { setPanelVisible(windowId, true); });
-chrome.sidePanel.onClosed?.addListener(({ windowId }) => { setPanelVisible(windowId, false); });
-chrome.tabs.onRemoved.addListener(id => closedTabs.delete(id));
-chrome.windows.onRemoved.addListener(id => chrome.storage.session.remove(panelKey(id)));
+chrome.sidePanel.onOpened?.addListener(({ windowId }) => {
+  chrome.storage.session.remove([dismissedKey(windowId), minimizeKey(windowId)])
+    .then(() => setPanelVisible(windowId, true));
+});
+async function handlePanelClosed(windowId) {
+  const key = minimizeKey(windowId);
+  const state = await chrome.storage.session.get(key);
+  await chrome.storage.session.set({ [dismissedKey(windowId)]: !state[key] });
+  await chrome.storage.session.remove(key);
+  await setPanelVisible(windowId, false);
+}
+chrome.sidePanel.onClosed?.addListener(({ windowId }) => { handlePanelClosed(windowId); });
+chrome.windows.onRemoved.addListener(id => chrome.storage.session.remove([panelKey(id), dismissedKey(id), minimizeKey(id)]));
 
 chrome.runtime.onMessage.addListener((message, sender, respond) => {
   if (message?.channel !== "prompt-pocket-sidebar" || sender.id !== chrome.runtime.id) return;
@@ -27,17 +45,20 @@ chrome.runtime.onMessage.addListener((message, sender, respond) => {
         // Call before any await so the orb click retains its user gesture.
         operation = chrome.sidePanel.open({ windowId }).then(() => setPanelVisible(windowId, true));
       } else if (message.action === "visibility") {
-        operation = panelVisible(windowId).then(open => ({ visible: !open && !closedTabs.has(id) }));
+        operation = orbVisible(windowId).then(visible => ({ visible }));
       } else if (message.action === "input-changed") {
         operation = chrome.runtime.sendMessage({ channel: "prompt-pocket-input", tabId: id, windowId }).catch(() => {});
       } else return;
     } else if (message.action === "close") {
       operation = (async () => {
-        if (message.dismiss) {
-          const [tab] = await chrome.tabs.query({ active: true, windowId: message.windowId });
-          if (tab) closedTabs.add(tab.id);
+        await chrome.storage.session.set({ [minimizeKey(message.windowId)]: true });
+        try {
+          await chrome.sidePanel.close({ windowId: message.windowId });
+        } catch (error) {
+          await chrome.storage.session.remove(minimizeKey(message.windowId));
+          throw error;
         }
-        await chrome.sidePanel.close({ windowId: message.windowId });
+        await chrome.storage.session.remove(dismissedKey(message.windowId));
         await setPanelVisible(message.windowId, false);
       })();
     } else if (message.action === "page") {

@@ -9,7 +9,7 @@ const CONTENT_SCRIPT_ACTIONS = new Set(["get", "save-confirmed", "delete", "mark
 let mutationQueue = Promise.resolve();
 
 chrome.action.onClicked.addListener((tab) => {
-  showWidget(tab).catch((error) => {
+  resumeWidget(tab.windowId).then(() => showWidget(tab)).catch((error) => {
     console.error("提示词口袋无法显示悬浮助手：", error?.message || error);
   });
 });
