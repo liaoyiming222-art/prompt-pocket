@@ -207,10 +207,11 @@ function authorizeMessage(message, sender) {
   // exact manager document, never a page URL supplied in the message payload.
   try {
     const senderUrl = new URL(sender.url);
-    const managerUrl = new URL(chrome.runtime.getURL("popup.html"));
-    if (senderUrl.protocol === managerUrl.protocol &&
-        senderUrl.host === managerUrl.host &&
-        senderUrl.pathname === managerUrl.pathname &&
+    const extensionUrl = new URL(chrome.runtime.getURL("popup.html"));
+    const trustedPaths = ["/popup.html", "/sidebar.html"];
+    if (senderUrl.protocol === extensionUrl.protocol &&
+        senderUrl.host === extensionUrl.host &&
+        trustedPaths.includes(senderUrl.pathname) &&
         sender.frameId === 0) return;
   } catch {}
   if (sender.tab && !CONTENT_SCRIPT_ACTIONS.has(message.action)) throw new Error("当前页面无权执行此操作");

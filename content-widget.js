@@ -67,14 +67,23 @@
       .toast.show { opacity: 1; transform: translate(-50%,0); }
       .title-modal { position: absolute; inset: 0; z-index: 10; display: grid; place-items: center; padding: 18px; background: rgba(28,32,48,.42); backdrop-filter: blur(2px); }
       .title-modal[hidden] { display: none; }
-      .reader { position: absolute; inset: 55px 0 0; z-index: 5; padding: 16px; display: flex; flex-direction: column; gap: 12px; background: white; }
+      .reader { position: absolute; inset: 55px 0 0; z-index: 5; padding: 16px; display: flex; flex-direction: column; gap: 10px; background: white; }
       .reader[hidden] { display: none; }
       .reader-head { display: flex; align-items: flex-start; gap: 12px; }
       .reader-heading { flex: 1; min-width: 0; margin: 0; overflow-wrap: anywhere; font-size: 14px; }
       .reader-close { flex-shrink: 0; font-size: 22px; width: 32px; padding: 0; }
-      .reader-content { flex: 1; min-height: 0; margin: 0; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; font-size: 13px; line-height: 1.7; }
+      .reader-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: #72798a; font-size: 11px; }
+      .reader-history-toggle { padding: 5px 8px; border: 0; border-radius: 7px; color: #6555d7; background: #efedff; font-size: 11px; }
+      .reader-history { flex: 0 0 auto; max-height: 150px; padding: 6px; display: grid; gap: 4px; overflow-y: auto; border: 1px solid #e7e8ee; border-radius: 9px; background: #f7f7fa; }
+      .reader-history[hidden] { display: none; }
+      .reader-version { width: 100%; padding: 7px 9px; display: flex; justify-content: space-between; gap: 8px; border: 0; border-radius: 7px; color: #555c6d; background: transparent; font-size: 11px; text-align: left; }
+      .reader-version:hover, .reader-version.active { color: #5947d7; background: #efedff; }
+      .reader-content { flex: 1; min-height: 0; width: 100%; padding: 10px; overflow: auto; resize: none; border: 1px solid transparent; border-radius: 9px; outline: 0; color: #1d2433; background: white; white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; font-size: 13px; line-height: 1.7; }
+      .reader-content:not([readonly]) { border-color: #aaa1f1; background: #fdfcff; box-shadow: 0 0 0 3px #efedff; }
       .reader-footer { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 12px; color: #72798a; }
-      .reader-copy { min-height: 36px; padding: 0 18px; border: 0; border-radius: 8px; background: #6c5ce7; color: white; }
+      .reader-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 7px; margin-left: auto; }
+      .reader-action { min-height: 36px; padding: 0 12px; border: 1px solid #e7e8ee; border-radius: 8px; color: #545b6a; background: white; }
+      .reader-action.primary { border-color: #6c5ce7; color: white; background: #6c5ce7; }
       .item { display: flex; align-items: center; gap: 10px; padding: 10px; }
       .insert { flex: 1; min-width: 0; }
       .tools { position: static; flex: 0 0 auto; transform: none; }
@@ -107,8 +116,10 @@
         </div>
         <section class="reader" hidden aria-labelledby="readerHeading">
           <header class="reader-head"><h2 id="readerHeading" class="reader-heading"></h2><button class="tool reader-close" type="button" title="关闭预览" aria-label="关闭预览">×</button></header>
-          <pre class="reader-content" tabindex="0"></pre>
-          <footer class="reader-footer"><span class="reader-feedback" role="status"></span><button class="reader-copy" type="button">复制</button></footer>
+          <div class="reader-meta"><span class="reader-version-meta"></span><button class="reader-history-toggle" type="button">历史版本</button></div>
+          <div class="reader-history" hidden></div>
+          <textarea class="reader-content" readonly aria-label="提示词内容"></textarea>
+          <footer class="reader-footer"><span class="reader-feedback" role="status"></span><div class="reader-actions"></div></footer>
         </section>
         <div class="toast"></div>
         <div class="title-modal" hidden>
@@ -145,9 +156,16 @@
   const reader = root.querySelector('.reader');
   const readerContent = root.querySelector('.reader-content');
   const readerClose = root.querySelector('.reader-close');
+  const readerHistory = root.querySelector('.reader-history');
+  const readerActions = root.querySelector('.reader-actions');
+  const readerFeedback = root.querySelector('.reader-feedback');
+  let readerState = null;
   let readerTrigger = null;
   function closeReader() {
+    if (readerDirty() && !confirm('有未保存的修改，确定放弃吗？')) return;
     reader.hidden = true;
+    readerHistory.hidden = true;
+    readerState = null;
     root.querySelector('.body').inert = false;
     (readerTrigger?.isConnected ? readerTrigger : ui.search).focus({preventScroll:true});
   }
@@ -155,14 +173,10 @@
   reader.addEventListener('keydown', event => {
     if (event.key === 'Escape') { event.preventDefault(); closeReader(); }
   });
-  root.querySelector('.reader-copy').addEventListener('click', async () => {
-    const button = root.querySelector('.reader-copy');
-    button.disabled = true;
-    try {
-      const copied = await copyText(readerContent.textContent);
-      root.querySelector('.reader-feedback').textContent = copied ? '已复制' : '复制失败，请重试';
-    } finally { button.disabled = false; }
+  root.querySelector('.reader-history-toggle').addEventListener('click', () => {
+    readerHistory.hidden = !readerHistory.hidden;
   });
+  readerContent.addEventListener('input', updateReaderActions);
   let lastEditable = isEditable(document.activeElement) ? document.activeElement : null;
   let lastInputContent = lastEditable ? readValue(lastEditable) : "";
   let toastTimer;
@@ -251,6 +265,7 @@
     if (area === "local" && changes[STORAGE_KEY]) {
       data = normalizeData(changes[STORAGE_KEY].newValue);
       render();
+      if (!reader.hidden) syncReaderFromStorage();
     }
   });
   if (sidebar) {
@@ -379,6 +394,163 @@
     if (!reader.hidden) ui.list.scrollTop = savedScroll;
   }
 
+  function promptRevision(prompt) {
+    return JSON.stringify([prompt.title, prompt.currentVersionId, prompt.versions.map(version => [version.id, version.content])]);
+  }
+
+  function readerDirty() {
+    return Boolean(readerState?.editing && readerContent.value !== readerState.baseline);
+  }
+
+  function formatVersionDate(value) {
+    return new Intl.DateTimeFormat('zh-CN', {month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}).format(new Date(value));
+  }
+
+  function actionButton(label, handler, primary = false) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `reader-action${primary ? ' primary' : ''}`;
+    button.textContent = label;
+    button.addEventListener('click', handler);
+    return button;
+  }
+
+  function openReader(prompt, version = currentVersion(prompt)) {
+    readerState = {
+      promptId: prompt.id,
+      versionId: version.id,
+      baseline: version.content,
+      revision: promptRevision(prompt),
+      editing: false,
+      conflict: false,
+    };
+    root.querySelector('.reader-heading').textContent = prompt.title;
+    readerContent.value = version.content;
+    readerContent.readOnly = true;
+    readerFeedback.textContent = '';
+    readerHistory.hidden = true;
+    reader.hidden = false;
+    root.querySelector('.body').inert = true;
+    readerContent.scrollTop = 0;
+    renderReaderHistory(prompt);
+    updateReaderActions();
+    readerClose.focus({preventScroll:true});
+  }
+
+  function renderReaderHistory(prompt) {
+    readerHistory.replaceChildren();
+    [...prompt.versions].reverse().forEach(version => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = `reader-version${version.id === readerState.versionId ? ' active' : ''}`;
+      button.innerHTML = `<strong>V${version.number || ''}${version.id === prompt.currentVersionId ? ' · 当前' : ''}</strong><span>${formatVersionDate(version.createdAt)}</span>`;
+      button.addEventListener('click', () => {
+        if (readerDirty() && !confirm('有未保存的修改，确定切换版本吗？')) return;
+        readerState.versionId = version.id;
+        readerState.baseline = version.content;
+        readerState.editing = false;
+        readerContent.value = version.content;
+        readerContent.readOnly = true;
+        readerFeedback.textContent = '';
+        readerHistory.hidden = true;
+        renderReaderHistory(prompt);
+        updateReaderActions();
+      });
+      readerHistory.append(button);
+    });
+  }
+
+  function updateReaderActions() {
+    if (!readerState) return;
+    const prompt = data.prompts.find(item => item.id === readerState.promptId);
+    const version = prompt?.versions.find(item => item.id === readerState.versionId);
+    const isCurrent = Boolean(prompt && version && version.id === prompt.currentVersionId);
+    root.querySelector('.reader-version-meta').textContent = version
+      ? `${isCurrent ? '当前版本' : '历史版本'} V${version.number || ''} · ${formatVersionDate(version.createdAt)}`
+      : '版本已不存在';
+    readerActions.replaceChildren();
+    if (readerState.editing) {
+      readerActions.append(
+        actionButton('取消', () => {
+          if (readerDirty() && !confirm('确定放弃修改吗？')) return;
+          readerContent.value = readerState.baseline;
+          readerContent.readOnly = true;
+          readerState.editing = false;
+          readerFeedback.textContent = '';
+          updateReaderActions();
+        }),
+        actionButton('保存', saveReaderEdit, true),
+      );
+      readerActions.lastElementChild.disabled = readerState.conflict || !readerDirty();
+      return;
+    }
+    if (!isCurrent) readerActions.append(actionButton('返回最新版', () => openReader(prompt, currentVersion(prompt))));
+    readerActions.append(actionButton('复制', copyReaderContent));
+    if (isCurrent) readerActions.append(actionButton('编辑', () => {
+      readerState.editing = true;
+      readerContent.readOnly = false;
+      readerContent.focus();
+      updateReaderActions();
+    }, true));
+    else readerActions.append(actionButton('恢复', restoreReaderVersion, true));
+  }
+
+  async function copyReaderContent() {
+    readerFeedback.textContent = await copyText(readerContent.value) ? '已复制' : '复制失败，请重试';
+  }
+
+  async function saveReaderEdit() {
+    if (!readerState || readerState.conflict || !readerDirty()) return;
+    const content = readerContent.value.trim();
+    if (!content) return void (readerFeedback.textContent = '提示词内容不能为空');
+    const prompt = data.prompts.find(item => item.id === readerState.promptId);
+    const response = await sendDataMessage('update', {id:prompt.id,title:prompt.title,content,expectedRevision:readerState.revision});
+    if (!response.ok) {
+      readerState.conflict = true;
+      readerFeedback.textContent = response.error || '保存失败，草稿已保留';
+      return updateReaderActions();
+    }
+    data = normalizeData(response.data);
+    const updated = response.prompt;
+    const latest = currentVersion(updated);
+    openReader(updated, latest);
+    readerFeedback.textContent = response.result === 'version' ? '已保存为新版本' : '内容未变，未新增版本';
+    render();
+  }
+
+  async function restoreReaderVersion() {
+    if (!readerState || readerState.conflict) return;
+    const response = await sendDataMessage('restore-version', {id:readerState.promptId,versionId:readerState.versionId,expectedRevision:readerState.revision});
+    if (!response.ok) {
+      readerState.conflict = true;
+      readerFeedback.textContent = response.error || '恢复失败';
+      return updateReaderActions();
+    }
+    data = normalizeData(response.data);
+    openReader(response.prompt, currentVersion(response.prompt));
+    readerFeedback.textContent = '已恢复并生成新版本';
+    render();
+  }
+
+  function syncReaderFromStorage() {
+    if (!readerState) return;
+    const prompt = data.prompts.find(item => item.id === readerState.promptId);
+    if (!prompt || promptRevision(prompt) !== readerState.revision) {
+      if (readerDirty()) {
+        readerState.conflict = true;
+        readerFeedback.textContent = '其他页面已更新此提示词，草稿已保留，请先复制草稿再查看最新版本。';
+        return updateReaderActions();
+      }
+      if (!prompt) {
+        readerState.conflict = true;
+        readerFeedback.textContent = '此提示词已被删除';
+        return updateReaderActions();
+      }
+      const selected = prompt.versions.find(item => item.id === readerState.versionId) || currentVersion(prompt);
+      openReader(prompt, selected);
+    }
+  }
+
   function createItem(prompt) {
     const version = currentVersion(prompt);
     const item = document.createElement("article");
@@ -425,13 +597,7 @@
     view.textContent = '预览';
     view.addEventListener('click', () => {
       readerTrigger = view;
-      root.querySelector('.reader-heading').textContent = prompt.title;
-      readerContent.textContent = version.content;
-      root.querySelector('.reader-feedback').textContent = '';
-      reader.hidden = false;
-      root.querySelector('.body').inert = true;
-      readerContent.scrollTop = 0;
-      readerClose.focus({preventScroll:true});
+      openReader(prompt, version);
     });
     tools.append(view, copy, remove);
     item.append(insert, tools);
