@@ -3,10 +3,10 @@
 ## 基本信息
 
 - 扩展名称：提示词口袋
-- 版本：0.6.3
+- 版本：0.6.8
 - 类别建议：生产力
 - 定价建议：免费
-- 主要语言：简体中文（zh-CN）
+- 产品语言：英语（en，默认）和简体中文（zh-CN）
 
 ## 简短说明
 
@@ -41,7 +41,36 @@
 
 ## 隐私页逐项填写（对应 Partner Center 截图）
 
-以下填写内容按 0.6.1 的实际代码整理，更新日期：2026-09-15。各理由正文均少于 1000 字，可直接复制对应段落。数据分类是基于当前功能的判断，不代表微软已认可分类或批准发布。
+以下填写内容按 0.6.8 的实际代码整理，更新日期：2026-09-28。各理由正文均少于 1000 字，可直接复制对应段落。数据分类是基于当前功能的判断，不代表微软已认可分类或批准发布。
+
+## English (United States) listing
+
+- Extension name: **Prompt Pocket**
+- Category: **Productivity**
+- Pricing: **Free**
+
+### Short description
+
+Save, search, and reuse prompts in the browser side panel, with local storage and automatic version history.
+
+### Detailed description
+
+Prompt Pocket is a local-first prompt manager for Microsoft Edge and Chrome. A movable button on regular webpages opens the browser's native side panel, so prompts are always close at hand.
+
+Key features:
+
+- Read text from regular inputs, text areas, and common rich-text editors.
+- Search saved prompts and insert them into the current webpage input.
+- Keep a version whenever prompt content changes, then preview, edit, copy, or restore earlier versions.
+- Create, edit, and delete prompts, and import or export JSON backups from the manager page.
+- Avoid password, verification-code, payment-card, and other recognizable sensitive fields.
+- Store all data in the current browser, with no account, advertising, analytics, cloud sync, or remote code.
+
+After site access is allowed, a purple P button appears on regular HTTP/HTTPS webpages. Browser internal pages, extension stores, some complex editors, and iframe inputs cannot be read or edited. If direct insertion is blocked, Prompt Pocket attempts to copy the prompt to the clipboard.
+
+### Search terms
+
+prompt, prompt manager, AI, ChatGPT, productivity, text template, side panel, local first
 
 ### 1. 单一用途描述
 

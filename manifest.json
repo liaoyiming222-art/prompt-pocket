@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extensionName__",
-  "version": "0.6.7",
-  "default_locale": "zh_CN",
+  "version": "0.6.8",
+  "default_locale": "en",
   "description": "__MSG_extensionDescription__",
   "icons": {
     "16": "icons/icon-16.png",
@@ -21,7 +21,7 @@
     "service_worker": "background.js"
   },
   "action": {
-    "default_title": "显示提示词悬浮助手",
+    "default_title": "__MSG_actionTitle__",
     "default_icon": {
       "16": "icons/icon-16.png",
       "32": "icons/icon-32.png"
@@ -38,6 +38,7 @@
         "https://*/*"
       ],
       "js": [
+        "i18n.js",
         "content-widget.js"
       ],
       "run_at": "document_idle"

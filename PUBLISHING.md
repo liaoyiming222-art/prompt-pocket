@@ -2,14 +2,20 @@
 
 ## Microsoft Edge 加载项
 
-上传 `release/edge-addons-v0.6.1/提示词口袋-edge-v0.6.1.zip`。ZIP 根目录已经直接包含 `manifest.json`，不要再套一层文件夹。
+上传 `release/edge-addons-v0.6.8/提示词口袋-edge-v0.6.8.zip`。ZIP 根目录已经直接包含 `manifest.json`，不要再套一层文件夹。0.6.8 同时包含英文和简体中文资源，商店可据此识别两种产品语言。
 
-在 Partner Center 中填写 `STORE_LISTING.md` 的文案，并上传 `release/edge-addons-v0.6.1/store-assets` 中的素材：
+在 Partner Center 中填写 `STORE_LISTING.md` 的中英文文案。现有商店图片可以继续使用；若希望英语商店页面完全英文化，另行上传英文界面截图。
 
-- `logo-128.png`：扩展徽标。
-- `small-promo-440x280.png`：小型宣传磁贴。
-- `screenshot-1-sidebar-1280x800.png`：侧边栏主要界面。
-- `screenshot-2-manager-1280x800.png`：管理页面。
+- `icons/icon-128.png`：扩展徽标。
+
+0.6.8 英语商店素材已经整理在 `release/edge-addons-v0.6.8/store-assets-en`：
+
+- `logo-300x300.png`：英语扩展徽标，必填。
+- `screenshot-1-side-panel-1280x800.png`：英语侧边栏截图。
+- `screenshot-2-manager-1280x800.png`：英语管理与版本历史截图。
+- `small-promo-440x280.png`：小型宣传磁贴，可选。
+- `large-promo-1400x560.png`：大型宣传磁贴，可选。
+- `ENGLISH-LISTING.txt`：可直接填写的英语描述、搜索词和链接。
 
 提交前完成以下检查：
 
@@ -35,9 +41,8 @@
 
 公开前仍需选择许可证。若希望允许他人使用、修改和分发，可选择 MIT；若暂时不希望授予这些权利，就先不添加许可证。许可证属于权利决定，本项目不替你自动选择。
 
-建议首次发布标签：`v0.6.1`，Release 标题：`提示词口袋 v0.6.1`。
+建议本次发布标签：`v0.6.8`，Release 标题：`提示词口袋 / Prompt Pocket v0.6.8`。
 
 Release 说明：
 
 > 首个公开版本。支持普通网页悬浮球、Microsoft Edge 原生侧边栏、提示词本地保存与搜索、网页输入框插入、历史版本恢复，以及 JSON 导入导出。所有提示词数据仅保存在当前浏览器。
-

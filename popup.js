@@ -1,5 +1,6 @@
 const STORAGE_KEY = "promptPocketData";
 const MAX_IMPORT_BYTES = 8 * 1024 * 1024;
+const t = PromptPocketI18n.t;
 
 const state = {
   data: { schemaVersion: 1, prompts: [] },
@@ -25,12 +26,22 @@ const els = {
 document.addEventListener("DOMContentLoaded", init);
 
 async function init() {
+  localizeDocument();
   state.standalone = new URLSearchParams(location.search).get("view") === "manager";
   if (state.standalone) document.body.classList.add("standalone");
   await loadData();
   bindEvents();
   chrome.storage.onChanged.addListener(handleStorageChange);
   renderList();
+}
+
+function localizeDocument() {
+  document.documentElement.lang = PromptPocketI18n.locale;
+  document.title = t("extensionName");
+  document.querySelectorAll("[data-i18n]").forEach((element) => { element.textContent = t(element.dataset.i18n); });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => { element.placeholder = t(element.dataset.i18nPlaceholder); });
+  document.querySelectorAll("[data-i18n-title]").forEach((element) => { element.title = t(element.dataset.i18nTitle); });
+  document.querySelectorAll("[data-i18n-aria]").forEach((element) => { element.setAttribute("aria-label", t(element.dataset.i18nAria)); });
 }
 
 function handleStorageChange(changes, area) {
@@ -52,7 +63,7 @@ function dirty() {
 }
 function mayLeave() {
   if (state.busy) return false;
-  return !dirty() || confirm("有未保存的修改，确定放弃这些修改吗？");
+  return !dirty() || confirm(t("unsavedConfirm"));
 }
 function adopt(prompt) {
   els.titleInput.value = prompt.title;
@@ -70,11 +81,11 @@ function syncEditor() {
   state.conflict = true;
   $("conflictNotice").hidden = false;
   $("conflictText").textContent = prompt
-    ? "其他页面已修改此提示词。你的草稿已保留；请载入最新内容，或将草稿另存为新提示词。"
-    : "此提示词已在其他页面删除。你的草稿已保留，可另存为新提示词。";
+    ? t("externalChanged")
+    : t("externalDeleted");
   $("reloadLatestButton").disabled = !prompt;
   if (prompt) renderVersions(prompt);
-  else { els.versionList.replaceChildren(); els.versionCount.textContent = "已删除"; }
+  else { els.versionList.replaceChildren(); els.versionCount.textContent = t("deleted"); }
 }
 async function mutate(action, payload) {
   if (state.busy) return null;
@@ -85,7 +96,7 @@ async function mutate(action, payload) {
   let response;
   try {
     response = await request(action, payload);
-    if (!response.ok) { toast(response.error || "操作失败"); await loadData(); }
+    if (!response.ok) { toast(response.error || t("operationFailed")); await loadData(); }
     else state.data = response.data;
   } finally {
     state.busy = false;
@@ -139,9 +150,9 @@ function bindEvents() {
     button.disabled = true;
     try {
       await navigator.clipboard.writeText($("previewContent").value);
-      $("previewFeedback").textContent = "已复制";
+      $("previewFeedback").textContent = t("copied");
     } catch {
-      $("previewFeedback").textContent = "复制失败，请重试";
+      $("previewFeedback").textContent = t("copyFailed");
     } finally { button.disabled = false; }
   });
   $("reloadLatestButton").addEventListener("click", () => {
@@ -151,9 +162,9 @@ function bindEvents() {
   });
   $("saveDraftCopyButton").addEventListener("click", async () => {
     const title = els.titleInput.value.trim(), content = els.contentInput.value.trim();
-    if (!title || !content) return toast("请填写标题和提示词内容");
+    if (!title || !content) return toast(t("fillTitleContent"));
     const response = await mutate("create", {title, content});
-    if (response) { state.baseline = null; showList(); toast("草稿已另存为新提示词"); }
+    if (response) { state.baseline = null; showList(); toast(t("draftSavedCopy")); }
   });
 }
 
@@ -179,7 +190,7 @@ function showSettings() {
   if (!mayLeave()) return;
   showView(els.settingsView);
   const versions = state.data.prompts.reduce((total, prompt) => total + prompt.versions.length, 0);
-  els.dataSummary.textContent = `${state.data.prompts.length} 条提示词 · ${versions} 个版本`;
+  els.dataSummary.textContent = t("promptsVersions", state.data.prompts.length, versions);
 }
 
 function currentVersion(prompt) {
@@ -195,14 +206,14 @@ function renderList() {
     })
     .sort((a, b) => (b.lastUsedAt || b.updatedAt).localeCompare(a.lastUsedAt || a.updatedAt));
 
-  els.listTitle.textContent = query ? `搜索结果（${prompts.length}）` : state.standalone ? "全部提示词" : "最近使用";
+  els.listTitle.textContent = query ? t("searchResults", prompts.length) : state.standalone ? t("allPrompts") : t("recent");
   els.promptList.replaceChildren();
   els.emptyState.hidden = prompts.length > 0 || Boolean(query);
 
   if (!prompts.length && query) {
     const message = document.createElement("div");
     message.className = "empty-state";
-    message.innerHTML = "<div class=\"empty-icon\">⌕</div><h3>没有匹配结果</h3><p>换一个关键词，或手动新建提示词。</p>";
+    message.innerHTML = `<div class="empty-icon">⌕</div><h3>${t("noResults")}</h3><p>${t("noResultsHelp")}</p>`;
     els.promptList.append(message);
     return;
   }
@@ -215,7 +226,7 @@ function renderList() {
     const main = document.createElement("button");
     main.className = "prompt-main";
     main.type = "button";
-    main.title = state.standalone ? "点击编辑" : "点击插入当前网页";
+    main.title = state.standalone ? t("clickEdit") : t("clickInsert");
     const title = document.createElement("span");
     title.className = "prompt-title";
     title.textContent = prompt.title;
@@ -227,7 +238,7 @@ function renderList() {
 
     const actions = document.createElement("div");
     actions.className = "prompt-actions";
-    actions.append(miniButton("编辑", "编辑", () => openEditor(prompt.id)));
+    actions.append(miniButton(t("edit"), t("edit"), () => openEditor(prompt.id)));
     item.append(main, actions);
     els.promptList.append(item);
   }
@@ -249,7 +260,7 @@ function openEditor(id = null, seed = {}) {
   state.editingId = id;
   const prompt = id ? state.data.prompts.find((item) => item.id === id) : null;
   const version = prompt ? currentVersion(prompt) : null;
-  els.editorModeLabel.textContent = prompt ? "编辑提示词" : "新建提示词";
+  els.editorModeLabel.textContent = prompt ? t("editPrompt") : t("createPrompt");
   els.titleInput.value = prompt?.title || seed.title || "";
   els.contentInput.value = version?.content || seed.content || "";
   state.baseline = {title: els.titleInput.value, content: els.contentInput.value};
@@ -259,7 +270,7 @@ function openEditor(id = null, seed = {}) {
   els.deleteButton.hidden = !prompt;
   els.historySection.hidden = !prompt;
   const source = prompt?.source || state.sourceForNewPrompt;
-  els.sourceMeta.textContent = source?.host ? `来源：${source.host}` : "";
+  els.sourceMeta.textContent = source?.host ? t("source", source.host) : "";
   showView(els.editorView);
   if (prompt) renderVersions(prompt);
   setTimeout(() => (els.titleInput.value ? els.contentInput : els.titleInput).focus(), 0);
@@ -267,7 +278,7 @@ function openEditor(id = null, seed = {}) {
 
 function renderVersions(prompt) {
   const versions = [...prompt.versions].reverse();
-  els.versionCount.textContent = `${versions.length} 个版本`;
+  els.versionCount.textContent = t("versionCount", versions.length);
   els.versionList.replaceChildren();
   versions.forEach((version, index) => {
     const row = document.createElement("div");
@@ -282,19 +293,19 @@ function renderVersions(prompt) {
     if (version.id === prompt.currentVersionId) {
       const current = document.createElement("span");
       current.className = "version-current";
-      current.textContent = "当前版本";
+      current.textContent = t("currentVersion");
       copy.append(current);
     }
     const actions = document.createElement("div");
     actions.className = "version-actions";
     const isCurrent = version.id === prompt.currentVersionId;
-    const restore = miniButton("恢复", isCurrent ? "已是当前版本" : "恢复此版本", () => restoreVersion(prompt.id, version.id));
-    const remove = miniButton("删除", isCurrent ? "不能删除当前版本" : "删除此历史版本", () => deleteVersion(prompt.id, version.id));
+    const restore = miniButton(t("restore"), isCurrent ? t("alreadyCurrent") : t("restoreVersion"), () => restoreVersion(prompt.id, version.id));
+    const remove = miniButton(t("delete"), isCurrent ? t("cannotDeleteCurrent") : t("deleteHistory"), () => deleteVersion(prompt.id, version.id));
     restore.disabled = isCurrent || state.conflict || state.busy;
     remove.disabled = isCurrent || state.conflict || state.busy;
-    const previewButton = miniButton("预览", "查看完整正文", () => {
+    const previewButton = miniButton(t("preview"), t("viewFull"), () => {
       state.preview = {promptId: prompt.id, versionId: version.id, original: version.content, revision: revision(prompt)};
-      $("previewHeading").textContent = `查看与编辑版本 · ${prompt.title} · ${label.textContent}`;
+      $("previewHeading").textContent = `${t("viewEditVersion")} · ${prompt.title} · ${label.textContent}`;
       $("previewContent").value = version.content;
       $("previewFeedback").textContent = "";
       syncPreview();
@@ -310,14 +321,14 @@ function previewDirty() {
   return state.preview && $("versionPreview").open && $("previewContent").value !== state.preview.original;
 }
 function closePreview() {
-  if (state.busy || (previewDirty() && !confirm("有未保存的修改，确定放弃这些修改吗？"))) return;
+  if (state.busy || (previewDirty() && !confirm(t("unsavedConfirm")))) return;
   $("versionPreview").close();
 }
 function previewReady() {
   const preview = state.preview;
   const prompt = state.data.prompts.find(p => p.id === preview?.promptId);
   if (state.busy || !preview || !prompt || revision(prompt) !== preview.revision || state.conflict) {
-    $("previewFeedback").textContent = "此提示词已更新或删除。草稿已保留，可复制后关闭窗口，处理最新内容再操作。";
+    $("previewFeedback").textContent = t("staleDraftLong");
     return false;
   }
   return true;
@@ -331,18 +342,18 @@ function syncPreview() {
   $("deletePreviewButton").disabled = stale || current || state.conflict;
   $("restorePreviewButton").disabled = stale || current || state.conflict;
   $("savePreviewButton").disabled = stale || state.conflict || !previewDirty();
-  if (stale) $("previewFeedback").textContent = "此提示词已更新或删除。草稿已保留，请复制后处理最新内容。";
+  if (stale) $("previewFeedback").textContent = t("staleDraft");
 }
 async function savePreview() {
   if (!previewReady() || !previewDirty()) return;
   const content = $("previewContent").value.trim();
-  if (!content) { $("previewFeedback").textContent = "请填写提示词内容"; return; }
-  if (dirty() && !confirm("主编辑页有未保存的修改，保存此版本将替换这些修改，是否继续？")) return;
+  if (!content) { $("previewFeedback").textContent = t("fillContent"); return; }
+  if (dirty() && !confirm(t("mainDraftConfirm"))) return;
   const preview = state.preview;
   const prompt = state.data.prompts.find(p => p.id === preview.promptId);
   const response = await mutate("update", {id: prompt.id, title: prompt.title, content, expectedRevision: preview.revision});
   if (!response) {
-    $("previewFeedback").textContent = "保存失败，草稿已保留，请检查是否有其他页面更新。";
+    $("previewFeedback").textContent = t("saveFailedDraft");
     syncPreview();
     return;
   }
@@ -350,28 +361,28 @@ async function savePreview() {
   const version = currentVersion(response.prompt);
   state.preview = {promptId: prompt.id, versionId: version.id, original: version.content, revision: revision(response.prompt)};
   $("previewContent").value = version.content;
-  $("previewHeading").textContent = `查看与编辑版本 · ${response.prompt.title} · V${version.number} · ${formatDate(version.createdAt)}`;
-  $("previewFeedback").textContent = response.result === "version" ? "已保存为最新版" : "已保存，正文与最新版相同，未新增版本";
+  $("previewHeading").textContent = `${t("viewEditVersion")} · ${response.prompt.title} · V${version.number} · ${formatDate(version.createdAt)}`;
+  $("previewFeedback").textContent = response.result === "version" ? t("savedLatest") : t("savedNoVersion");
   syncPreview();
 }
 
 async function saveEditor(event) {
   event.preventDefault();
   if (state.busy) return;
-  if (state.conflict) return toast("请先处理其他页面的修改，或将草稿另存");
+  if (state.conflict) return toast(t("resolveConflict"));
   const title = els.titleInput.value.trim();
   const content = els.contentInput.value.trim();
-  if (!title || !content) return toast("请填写标题和提示词内容");
+  if (!title || !content) return toast(t("fillTitleContent"));
   if (state.editingId) {
     const response = await mutate("update", { id: state.editingId, title, content, expectedRevision: state.revision });
     if (!response) return;
     state.data = response.data;
-    toast(response.result === "version" ? "已保存为新版本" : "已保存");
+    toast(response.result === "version" ? t("savedNewVersion") : t("saved"));
   } else {
     const response = await mutate("create", { title, content, source: state.sourceForNewPrompt });
     if (!response) return;
     state.data = response.data;
-    toast("提示词已保存");
+    toast(t("promptSaved"));
   }
   state.baseline = null;
   showList();
@@ -379,51 +390,51 @@ async function saveEditor(event) {
 
 async function restoreVersion(promptId, versionId) {
   if (state.busy || state.conflict) return;
-  if (dirty() && !confirm("恢复将放弃当前未保存的修改，是否继续？")) return;
+  if (dirty() && !confirm(t("restoreDiscardConfirm"))) return;
   const response = await mutate("restore-version", { id: promptId, versionId, expectedRevision: state.revision });
   if (!response) return;
   state.data = response.data;
   adopt(response.prompt);
-  toast("已恢复，并保留为新版本");
+  toast(t("restoredNewVersion"));
   return response;
 }
 
 async function deleteVersion(promptId, versionId) {
-  if (state.busy || state.conflict || !confirm("确定删除此历史版本吗？删除后无法恢复。")) return;
+  if (state.busy || state.conflict || !confirm(t("deleteVersionConfirm"))) return;
   const response = await mutate("delete-version", {id: promptId, versionId, expectedRevision: state.revision});
   if (!response) return;
   state.revision = revision(response.prompt);
   renderVersions(response.prompt);
-  toast("历史版本已删除");
+  toast(t("historyDeleted"));
   return response;
 }
 
 async function deleteCurrentPrompt() {
   if (state.busy || state.conflict) return;
   const prompt = state.data.prompts.find((item) => item.id === state.editingId);
-  if (!prompt || !confirm(`确定删除“${prompt.title}”及其全部版本吗？`)) return;
+  if (!prompt || !confirm(t("deletePromptConfirm", prompt.title))) return;
   const response = await mutate("delete", { id: prompt.id, expectedRevision: state.revision });
   if (!response) return;
   state.data = response.data;
-  toast("已删除");
+  toast(t("deleted"));
   state.baseline = null;
   showList();
 }
 
 async function request(action, payload = {}) {
   try { return await chrome.runtime.sendMessage({ channel: "prompt-pocket", action, ...payload }); }
-  catch { return { ok: false, error: "插件服务暂不可用，请重新加载扩展" }; }
+  catch { return { ok: false, error: t("serviceUnavailable") }; }
 }
 
 function formatDate(value) {
-  return new Intl.DateTimeFormat("zh-CN", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }).format(new Date(value));
+  return new Intl.DateTimeFormat(PromptPocketI18n.locale, { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }).format(new Date(value));
 }
 
 function exportData() {
   const payload = JSON.stringify({ ...state.data, exportedAt: new Date().toISOString() }, null, 2);
   const url = URL.createObjectURL(new Blob([payload], { type: "application/json" }));
   const stamp = new Date().toISOString().slice(0, 10);
-  chrome.downloads.download({ url, filename: `提示词口袋备份-${stamp}.json`, saveAs: true }, () => setTimeout(() => URL.revokeObjectURL(url), 1000));
+  chrome.downloads.download({ url, filename: t("backupFilename", stamp), saveAs: true }, () => setTimeout(() => URL.revokeObjectURL(url), 1000));
 }
 
 async function importData(event) {
@@ -437,9 +448,9 @@ async function importData(event) {
     if (!response.ok) throw new Error(response.error || "invalid");
     state.data = response.data;
     showSettings();
-    toast("备份已导入");
+    toast(t("imported"));
   } catch {
-    toast("文件格式不正确，导入失败");
+    toast(t("importFailed"));
   }
 }
 

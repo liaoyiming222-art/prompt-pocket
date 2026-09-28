@@ -2,6 +2,11 @@
   if (window.top !== window || document.getElementById("prompt-pocket-host")) return;
 
   const sidebar = location.protocol === "chrome-extension:" && location.pathname === "/sidebar.html";
+  const t = PromptPocketI18n.t;
+  if (sidebar) {
+    document.documentElement.lang = PromptPocketI18n.locale;
+    document.title = t("extensionName");
+  }
   let windowId, capturedSource = null, captureSequence = 0;
   const STORAGE_KEY = "promptPocketData";
   const POSITION_KEY = "promptPocketWidgetPosition";
@@ -99,42 +104,42 @@
       @media (max-width: 430px) { .panel { width: min(340px, calc(100vw - 24px)); } }
     </style>
     <div class="wrap">
-      <section class="panel" aria-label="提示词口袋">
+      <section class="panel" aria-label="${t("extensionName")}">
         <header class="head">
-          <div class="brand"><span class="logo">P</span><span><strong>提示词口袋</strong><small>点击条目插入刚才的输入框</small></span></div>
+          <div class="brand"><span class="logo">P</span><span><strong>${t("extensionName")}</strong><small>${t("widgetSubtitle")}</small></span></div>
           <div class="head-actions">
-            <button class="head-btn manage" title="打开完整管理页">管理</button>
-            <button class="head-btn minimize" title="收起窗口" aria-label="收起窗口">—</button>
+            <button class="head-btn manage" title="${t("openManager")}">${t("manage")}</button>
+            <button class="head-btn minimize" title="${t("minimize")}" aria-label="${t("minimize")}">—</button>
           </div>
         </header>
         <div class="body">
-          <div class="save-box"><textarea class="draft" placeholder="网页输入内容会自动同步到这里"></textarea><button class="save">保存</button></div>
-          <div class="capture-meta"><span class="hint"></span><button class="reread">重新读取</button></div>
-          <input class="search" type="search" placeholder="搜索标题或内容" />
-          <div class="label"><span>提示词</span><span class="count"></span></div>
+          <div class="save-box"><textarea class="draft" placeholder="${t("draftPlaceholder")}"></textarea><button class="save">${t("save")}</button></div>
+          <div class="capture-meta"><span class="hint"></span><button class="reread">${t("reread")}</button></div>
+          <input class="search" type="search" placeholder="${t("searchPlaceholder")}" />
+          <div class="label"><span>${t("prompts")}</span><span class="count"></span></div>
           <div class="list"></div>
         </div>
         <section class="reader" hidden aria-labelledby="readerHeading">
-          <header class="reader-head"><h2 id="readerHeading" class="reader-heading"></h2><button class="tool reader-close" type="button" title="关闭预览" aria-label="关闭预览">×</button></header>
-          <div class="reader-meta"><span class="reader-version-meta"></span><button class="reader-history-toggle" type="button">历史版本</button></div>
+          <header class="reader-head"><h2 id="readerHeading" class="reader-heading"></h2><button class="tool reader-close" type="button" title="${t("closePreview")}" aria-label="${t("closePreview")}">×</button></header>
+          <div class="reader-meta"><span class="reader-version-meta"></span><button class="reader-history-toggle" type="button">${t("history")}</button></div>
           <div class="reader-history" hidden></div>
-          <textarea class="reader-content" readonly aria-label="提示词内容"></textarea>
+          <textarea class="reader-content" readonly aria-label="${t("content")}"></textarea>
           <footer class="reader-footer"><span class="reader-feedback" role="status"></span><div class="reader-actions"></div></footer>
         </section>
         <div class="toast"></div>
         <div class="title-modal" hidden>
           <form class="title-dialog">
-            <h3>提示词标题（选填）</h3>
-            <input class="title-input" maxlength="80" placeholder="输入标题" autocomplete="off" />
+            <h3>${t("optionalTitle")}</h3>
+            <input class="title-input" maxlength="80" placeholder="${t("inputTitle")}" autocomplete="off" />
             <div class="title-actions">
-              <button class="title-action title-cancel" type="button">取消</button>
-              <button class="title-action title-skip" type="button">先不填写</button>
-              <button class="title-action primary" type="submit">保存</button>
+              <button class="title-action title-cancel" type="button">${t("cancel")}</button>
+              <button class="title-action title-skip" type="button">${t("skipTitle")}</button>
+              <button class="title-action primary" type="submit">${t("save")}</button>
             </div>
           </form>
         </div>
       </section>
-      <button class="orb" title="打开提示词口袋" aria-label="打开提示词口袋">P</button>
+      <button class="orb" title="${t("openPocket")}" aria-label="${t("openPocket")}">P</button>
     </div>`;
 
   const ui = {
@@ -162,7 +167,7 @@
   let readerState = null;
   let readerTrigger = null;
   function closeReader() {
-    if (readerDirty() && !confirm('有未保存的修改，确定放弃吗？')) return;
+    if (readerDirty() && !confirm(t("discardShort"))) return;
     reader.hidden = true;
     readerHistory.hidden = true;
     readerState = null;
@@ -197,7 +202,7 @@
     }
     if (message.action === 'insert') {
       try {
-        if (!isEditable(lastEditable) || !lastEditable.isConnected) throw Error('请先点击网页输入框');
+        if (!isEditable(lastEditable) || !lastEditable.isConnected) throw Error(t("clickInputFirst"));
         writeValue(lastEditable, String(message.content || ''));
         lastInputContent = readValue(lastEditable);
         sendResponse({ok:true});
@@ -209,7 +214,7 @@
       sendResponse({ ok: true });
       return;
     }
-    sendResponse({ ok: false, error: "未知的悬浮助手操作" });
+    sendResponse({ ok: false, error: t("unknownWidgetAction") });
   });
 
   document.addEventListener("focusin", (event) => {
@@ -229,7 +234,7 @@
     sidebarRequest("input-changed");
     if (ui.panel.classList.contains("open") && document.activeElement !== host) {
       ui.draft.value = lastInputContent;
-      ui.hint.textContent = "已同步当前网页输入";
+      ui.hint.textContent = t("syncedInput");
     }
   }, true);
   document.addEventListener("selectionchange", rememberEditableSelection, true);
@@ -237,12 +242,12 @@
   ui.orb.addEventListener("click", async () => {
     if (pointerStart?.moved) return;
     const response = await sidebarRequest('open');
-    if (!response.ok) { ui.orb.title = '无法打开侧边栏：' + response.error; }
+    if (!response.ok) { ui.orb.title = t("cannotOpenSidebar", response.error); }
   });
   ui.minimize.addEventListener("click", closePanel);
   ui.manage.addEventListener("click", async () => {
     const response = await sendDataMessage("open-manager");
-    if (!response.ok) showToast(response.error || "无法打开管理窗口");
+    if (!response.ok) showToast(response.error || t("cannotOpenManager"));
   });
   ui.reread.addEventListener("click", captureDraft);
   ui.search.addEventListener("input", render);
@@ -290,7 +295,7 @@
 
   async function sidebarRequest(action, payload = {}) {
     try { return await chrome.runtime.sendMessage({channel:'prompt-pocket-sidebar',action,windowId,...payload}); }
-    catch { return {ok:false,error:'插件服务暂不可用，请重新加载扩展'}; }
+    catch { return {ok:false,error:t("serviceUnavailable")}; }
   }
 
   async function loadData() {
@@ -310,7 +315,7 @@
       if (sequence !== captureSequence) return;
       capturedSource = result.source || null;
       ui.draft.value = result.content || '';
-      ui.hint.textContent = result.ok ? result.hint : '当前页面无法读取，请先点击普通网页输入框';
+      ui.hint.textContent = result.ok ? result.hint : t("cannotReadPage");
       return;
     }
     ui.draft.value = '';
@@ -320,25 +325,25 @@
       lastInputContent = readValue(active);
     }
     if (active?.matches?.("iframe, frame") && !lastInputContent.trim()) {
-      ui.hint.textContent = "输入框位于内嵌页面，当前版本暂不支持读取";
+      ui.hint.textContent = t("iframeUnsupported");
       return;
     }
     if ((!isEditable(lastEditable) || !lastEditable.isConnected) && !lastInputContent.trim()) {
-      ui.hint.textContent = "未读取到聊天框，请先点击输入框";
+      ui.hint.textContent = t("noChatInput");
       return;
     }
     const content = (isEditable(lastEditable) && lastEditable.isConnected ? readValue(lastEditable) : lastInputContent).trim();
     if (content) {
       ui.draft.value = content;
-      ui.hint.textContent = `已读取聊天框 · ${content.length} 字`;
+      ui.hint.textContent = t("readChars", content.length);
     } else {
-      ui.hint.textContent = "当前输入框为空，可在上方直接新建";
+      ui.hint.textContent = t("emptyInput");
     }
   }
 
   function requestSaveDraft() {
     const content = ui.draft.value.trim();
-    if (!content) return showToast("请输入要保存的提示词");
+    if (!content) return showToast(t("enterPrompt"));
     ui.titleInput.value = "";
     ui.titleModal.hidden = false;
     requestAnimationFrame(() => ui.titleInput.focus());
@@ -354,7 +359,7 @@
     const content = ui.draft.value.trim();
     if (!content) {
       closeTitleDialog();
-      return showToast("请输入要保存的提示词");
+      return showToast(t("enterPrompt"));
     }
     ui.titleModal.hidden = true;
     ui.save.disabled = true;
@@ -364,12 +369,12 @@
       source: pageSource(),
     });
     ui.save.disabled = false;
-    if (!response.ok) return showToast(response.error || "保存失败");
+    if (!response.ok) return showToast(response.error || t("saveFailed"));
     data = normalizeData(response.data);
     render();
-    if (response.result === "duplicate-title-updated") showToast("已更新提示词标题");
-    else if (response.result === "duplicate") showToast("这条提示词已经保存过");
-    else showToast("已保存到提示词库");
+    if (response.result === "duplicate-title-updated") showToast(t("titleUpdated"));
+    else if (response.result === "duplicate") showToast(t("duplicatePrompt"));
+    else showToast(t("savedLibrary"));
   }
 
   function render() {
@@ -381,12 +386,12 @@
         return !query || `${prompt.title}\n${content}`.toLocaleLowerCase().includes(query);
       })
       .sort((a, b) => (b.lastUsedAt || b.updatedAt).localeCompare(a.lastUsedAt || a.updatedAt));
-    ui.count.textContent = `${prompts.length} 条`;
+    ui.count.textContent = t("countItems", prompts.length);
     ui.list.replaceChildren();
     if (!prompts.length) {
       const empty = document.createElement("div");
       empty.className = "empty";
-      empty.textContent = query ? "没有匹配的提示词" : "还没有提示词，在上方保存第一条吧";
+      empty.textContent = query ? t("noMatchingPrompts") : t("emptyLibrary");
       ui.list.append(empty);
       return;
     }
@@ -403,7 +408,7 @@
   }
 
   function formatVersionDate(value) {
-    return new Intl.DateTimeFormat('zh-CN', {month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}).format(new Date(value));
+    return new Intl.DateTimeFormat(PromptPocketI18n.locale, {month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}).format(new Date(value));
   }
 
   function actionButton(label, handler, primary = false) {
@@ -443,9 +448,9 @@
       const button = document.createElement('button');
       button.type = 'button';
       button.className = `reader-version${version.id === readerState.versionId ? ' active' : ''}`;
-      button.innerHTML = `<strong>V${version.number || ''}${version.id === prompt.currentVersionId ? ' · 当前' : ''}</strong><span>${formatVersionDate(version.createdAt)}</span>`;
+      button.innerHTML = `<strong>V${version.number || ''}${version.id === prompt.currentVersionId ? ` · ${t("currentShort")}` : ''}</strong><span>${formatVersionDate(version.createdAt)}</span>`;
       button.addEventListener('click', () => {
-        if (readerDirty() && !confirm('有未保存的修改，确定切换版本吗？')) return;
+        if (readerDirty() && !confirm(t("switchVersionConfirm"))) return;
         readerState.versionId = version.id;
         readerState.baseline = version.content;
         readerState.editing = false;
@@ -466,55 +471,55 @@
     const version = prompt?.versions.find(item => item.id === readerState.versionId);
     const isCurrent = Boolean(prompt && version && version.id === prompt.currentVersionId);
     root.querySelector('.reader-version-meta').textContent = version
-      ? `${isCurrent ? '当前版本' : '历史版本'} V${version.number || ''} · ${formatVersionDate(version.createdAt)}`
-      : '版本已不存在';
+      ? `${isCurrent ? t("currentVersion") : t("historicalVersion")} V${version.number || ''} · ${formatVersionDate(version.createdAt)}`
+      : t("versionMissing");
     readerActions.replaceChildren();
     if (readerState.editing) {
       readerActions.append(
-        actionButton('取消', () => {
-          if (readerDirty() && !confirm('确定放弃修改吗？')) return;
+        actionButton(t("cancel"), () => {
+          if (readerDirty() && !confirm(t("discardEditConfirm"))) return;
           readerContent.value = readerState.baseline;
           readerContent.readOnly = true;
           readerState.editing = false;
           readerFeedback.textContent = '';
           updateReaderActions();
         }),
-        actionButton('保存', saveReaderEdit, true),
+        actionButton(t("save"), saveReaderEdit, true),
       );
       readerActions.lastElementChild.disabled = readerState.conflict || !readerDirty();
       return;
     }
-    if (!isCurrent) readerActions.append(actionButton('返回最新版', () => openReader(prompt, currentVersion(prompt))));
-    readerActions.append(actionButton('复制', copyReaderContent));
-    if (isCurrent) readerActions.append(actionButton('编辑', () => {
+    if (!isCurrent) readerActions.append(actionButton(t("returnLatest"), () => openReader(prompt, currentVersion(prompt))));
+    readerActions.append(actionButton(t("copy"), copyReaderContent));
+    if (isCurrent) readerActions.append(actionButton(t("edit"), () => {
       readerState.editing = true;
       readerContent.readOnly = false;
       readerContent.focus();
       updateReaderActions();
     }, true));
-    else readerActions.append(actionButton('恢复', restoreReaderVersion, true));
+    else readerActions.append(actionButton(t("restore"), restoreReaderVersion, true));
   }
 
   async function copyReaderContent() {
-    readerFeedback.textContent = await copyText(readerContent.value) ? '已复制' : '复制失败，请重试';
+    readerFeedback.textContent = await copyText(readerContent.value) ? t("copied") : t("copyFailed");
   }
 
   async function saveReaderEdit() {
     if (!readerState || readerState.conflict || !readerDirty()) return;
     const content = readerContent.value.trim();
-    if (!content) return void (readerFeedback.textContent = '提示词内容不能为空');
+    if (!content) return void (readerFeedback.textContent = t("contentEmpty"));
     const prompt = data.prompts.find(item => item.id === readerState.promptId);
     const response = await sendDataMessage('update', {id:prompt.id,title:prompt.title,content,expectedRevision:readerState.revision});
     if (!response.ok) {
       readerState.conflict = true;
-      readerFeedback.textContent = response.error || '保存失败，草稿已保留';
+      readerFeedback.textContent = response.error || t("saveFailedDraft");
       return updateReaderActions();
     }
     data = normalizeData(response.data);
     const updated = response.prompt;
     const latest = currentVersion(updated);
     openReader(updated, latest);
-    readerFeedback.textContent = response.result === 'version' ? '已保存为新版本' : '内容未变，未新增版本';
+    readerFeedback.textContent = response.result === 'version' ? t("savedNewVersion") : t("unchangedNoVersion");
     render();
   }
 
@@ -523,12 +528,12 @@
     const response = await sendDataMessage('restore-version', {id:readerState.promptId,versionId:readerState.versionId,expectedRevision:readerState.revision});
     if (!response.ok) {
       readerState.conflict = true;
-      readerFeedback.textContent = response.error || '恢复失败';
+      readerFeedback.textContent = response.error || t("restoreFailed");
       return updateReaderActions();
     }
     data = normalizeData(response.data);
     openReader(response.prompt, currentVersion(response.prompt));
-    readerFeedback.textContent = '已恢复并生成新版本';
+    readerFeedback.textContent = t("restoredGenerated");
     render();
   }
 
@@ -538,12 +543,12 @@
     if (!prompt || promptRevision(prompt) !== readerState.revision) {
       if (readerDirty()) {
         readerState.conflict = true;
-        readerFeedback.textContent = '其他页面已更新此提示词，草稿已保留，请先复制草稿再查看最新版本。';
+        readerFeedback.textContent = t("conflictDraftCopy");
         return updateReaderActions();
       }
       if (!prompt) {
         readerState.conflict = true;
-        readerFeedback.textContent = '此提示词已被删除';
+        readerFeedback.textContent = t("promptWasDeleted");
         return updateReaderActions();
       }
       const selected = prompt.versions.find(item => item.id === readerState.versionId) || currentVersion(prompt);
@@ -558,7 +563,7 @@
     const insert = document.createElement("button");
     insert.className = "insert";
     insert.type = "button";
-    insert.title = "插入网页输入框";
+    insert.title = t("insertInput");
     const title = document.createElement("span");
     title.className = "title";
     title.textContent = prompt.title;
@@ -572,29 +577,29 @@
     const copy = document.createElement("button");
     copy.className = "tool";
     copy.type = "button";
-    copy.textContent = "复制";
+    copy.textContent = t("copy");
     copy.addEventListener("click", async () => {
-      if (!await copyText(version.content)) return showToast("复制失败，请在管理页手动复制");
+      if (!await copyText(version.content)) return showToast(t("copyManual"));
       await markUsed(prompt);
-      showToast("已复制");
+      showToast(t("copied"));
     });
     const remove = document.createElement("button");
     remove.className = "tool";
     remove.type = "button";
-    remove.textContent = "删除";
-    remove.title = "删除提示词";
+    remove.textContent = t("delete");
+    remove.title = t("deletePrompt");
     remove.addEventListener("click", async () => {
-      if (!confirm(`确定删除“${prompt.title}”及其全部版本吗？`)) return;
+      if (!confirm(t("deletePromptConfirm", prompt.title))) return;
       const response = await sendDataMessage("delete", { id: prompt.id });
-      if (!response.ok) return showToast(response.error || "删除失败");
+      if (!response.ok) return showToast(response.error || t("deleteFailed"));
       data = normalizeData(response.data);
       render();
-      showToast("已删除");
+      showToast(t("deleted"));
     });
     const view = document.createElement('button');
     view.className = 'tool';
     view.type = 'button';
-    view.textContent = '预览';
+    view.textContent = t("preview");
     view.addEventListener('click', () => {
       readerTrigger = view;
       openReader(prompt, version);
@@ -610,19 +615,19 @@
       const response = await sidebarRequest('page', {operation:'insert', content});
       if (!response.ok) {
         const copied = await copyText(content);
-        return showToast(copied ? '未能插入；内容已复制' : '未能插入，复制也失败了');
+        return showToast(copied ? t("insertFailedCopied") : t("insertCopyFailed"));
       }
       await markUsed(prompt); closePanel(); return;
     }
     if (!isEditable(lastEditable) || !lastEditable.isConnected) {
       const copied = await copyText(content);
-      return showToast(copied ? "请先点击输入框；内容已复制" : "未找到输入框，复制也失败了");
+      return showToast(copied ? t("clickInputCopied") : t("noInputCopyFailed"));
     }
     try {
       writeValue(lastEditable, content);
     } catch {
       const copied = await copyText(content);
-      return showToast(copied ? "网页拒绝插入；内容已复制" : "网页拒绝插入，复制也失败了");
+      return showToast(copied ? t("pageRejectedCopied") : t("pageRejectedCopyFailed"));
     }
     lastInputContent = content;
     await markUsed(prompt);
@@ -638,7 +643,7 @@
     try {
       return await chrome.runtime.sendMessage({ channel: "prompt-pocket", action, ...payload });
     } catch {
-      return { ok: false, error: "插件服务暂不可用，请重新加载扩展" };
+      return { ok: false, error: t("serviceUnavailable") };
     }
   }
 
@@ -740,7 +745,7 @@
   }
 
   function suggestTitle(content) {
-    const first = content.split(/\r?\n/).map((line) => line.trim()).find(Boolean) || "未命名提示词";
+    const first = content.split(/\r?\n/).map((line) => line.trim()).find(Boolean) || t("unnamedPrompt");
     return first.length > 28 ? `${first.slice(0, 28)}…` : first;
   }
 

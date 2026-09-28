@@ -1,0 +1,14 @@
+{
+  "extensionName": {
+    "message": "Prompt Pocket",
+    "description": "Extension name"
+  },
+  "extensionDescription": {
+    "message": "Save, search, and reuse prompts with automatic version history.",
+    "description": "Short description shown in stores and extension settings"
+  },
+  "actionTitle": {
+    "message": "Show Prompt Pocket",
+    "description": "Browser toolbar button tooltip"
+  }
+}

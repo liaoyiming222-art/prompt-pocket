@@ -1,71 +1,71 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>提示词口袋</title>
+    <title>Prompt Pocket</title>
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
     <main class="app">
       <header class="topbar">
-        <button id="homeButton" class="brand" type="button" title="返回提示词首页" aria-label="提示词口袋，返回首页">
+        <button id="homeButton" class="brand" type="button" data-i18n-title="homeTitle" data-i18n-aria="homeTitle">
           <span class="brand-mark">P</span>
           <span>
-            <strong>提示词口袋</strong>
-            <small>随手存，随时用</small>
+            <strong data-i18n="extensionName">Prompt Pocket</strong>
+            <small data-i18n="tagline">Save once, reuse anytime</small>
           </span>
         </button>
-        <button id="settingsButton" class="icon-button" type="button" title="备份与恢复" aria-label="备份与恢复">•••</button>
+        <button id="settingsButton" class="icon-button" type="button" data-i18n-title="backupRestore" data-i18n-aria="backupRestore">•••</button>
       </header>
 
       <section id="listView" class="view">
         <label class="search-box">
           <span aria-hidden="true">⌕</span>
-          <input id="searchInput" type="search" placeholder="搜索标题或内容" autocomplete="off" />
+          <input id="searchInput" type="search" data-i18n-placeholder="searchPlaceholder" autocomplete="off" />
         </label>
 
         <div class="section-heading">
-          <h2 id="listTitle">最近使用</h2>
-          <button id="newButton" class="text-button" type="button">＋ 新建</button>
+          <h2 id="listTitle" data-i18n="recent">Recently used</h2>
+          <button id="newButton" class="text-button" type="button" data-i18n="newPrompt">+ New</button>
         </div>
         <div id="promptList" class="prompt-list"></div>
         <div id="emptyState" class="empty-state" hidden>
           <div class="empty-icon">✦</div>
-          <h3>还没有提示词</h3>
-          <p>在网页输入框写好内容后，点击上方“保存”。</p>
-          <button id="emptyNewButton" class="secondary" type="button">手动新建</button>
+          <h3 data-i18n="emptyTitle">No prompts yet</h3>
+          <p data-i18n="emptyText">Write content in a webpage field, then click Save above.</p>
+          <button id="emptyNewButton" class="secondary" type="button" data-i18n="manualNew">Create manually</button>
         </div>
       </section>
 
       <section id="editorView" class="view" hidden>
         <div class="editor-heading">
-          <button id="editorBackButton" class="back-button" type="button">← 返回</button>
-          <span id="editorModeLabel">编辑提示词</span>
+          <button id="editorBackButton" class="back-button" type="button" data-i18n="back">← Back</button>
+          <span id="editorModeLabel" data-i18n="editPrompt">Edit prompt</span>
         </div>
         <div id="conflictNotice" class="conflict-notice" hidden role="status">
           <span id="conflictText"></span>
-          <button id="reloadLatestButton" type="button" class="secondary">载入最新内容</button>
-          <button id="saveDraftCopyButton" type="button" class="secondary">将草稿另存为新提示词</button>
+          <button id="reloadLatestButton" type="button" class="secondary" data-i18n="reloadLatest">Load latest</button>
+          <button id="saveDraftCopyButton" type="button" class="secondary" data-i18n="saveDraftCopy">Save draft as a new prompt</button>
         </div>
         <form id="editorForm">
           <label class="field">
-            <span>标题</span>
-            <input id="titleInput" maxlength="80" placeholder="例如：产品需求分析" required />
+            <span data-i18n="title">Title</span>
+            <input id="titleInput" maxlength="80" data-i18n-placeholder="titlePlaceholder" required />
           </label>
           <label class="field">
-            <span>提示词内容</span>
-            <textarea id="contentInput" rows="11" placeholder="输入要复用的提示词……" required></textarea>
+            <span data-i18n="content">Prompt content</span>
+            <textarea id="contentInput" rows="11" data-i18n-placeholder="contentPlaceholder" required></textarea>
           </label>
           <p id="sourceMeta" class="source-meta"></p>
           <div class="form-actions">
-            <button id="deleteButton" class="danger-text" type="button">删除</button>
-            <button class="primary grow" type="submit">保存</button>
+            <button id="deleteButton" class="danger-text" type="button" data-i18n="delete">Delete</button>
+            <button class="primary grow" type="submit" data-i18n="save">Save</button>
           </div>
         </form>
         <div id="historySection" class="history-section">
           <div class="section-heading">
-            <h2>历史版本</h2>
+            <h2 data-i18n="history">Version history</h2>
             <span id="versionCount" class="count"></span>
           </div>
           <div id="versionList" class="version-list"></div>
@@ -74,30 +74,31 @@
 
       <section id="settingsView" class="view" hidden>
         <div class="editor-heading">
-          <button id="settingsBackButton" class="back-button" type="button">← 返回</button>
-          <span>数据管理</span>
+          <button id="settingsBackButton" class="back-button" type="button" data-i18n="back">← Back</button>
+          <span data-i18n="dataManagement">Data management</span>
         </div>
         <div class="settings-card">
-          <h2>本地数据</h2>
-          <p>提示词只保存在当前浏览器。建议定期导出备份。</p>
-          <button id="exportButton" class="secondary full" type="button">导出 JSON 备份</button>
-          <button id="importButton" class="secondary full" type="button">导入 JSON 备份</button>
+          <h2 data-i18n="localData">Local data</h2>
+          <p data-i18n="localDataHelp">Prompts are stored only in this browser. Export backups regularly.</p>
+          <button id="exportButton" class="secondary full" type="button" data-i18n="exportBackup">Export JSON backup</button>
+          <button id="importButton" class="secondary full" type="button" data-i18n="importBackup">Import JSON backup</button>
           <input id="importFile" type="file" accept="application/json,.json" hidden />
         </div>
         <div class="settings-card subtle">
-          <strong id="dataSummary">0 条提示词</strong>
-          <p>导入会合并数据；相同 ID 的提示词以更新时间较新的版本为准。</p>
+          <strong id="dataSummary" data-i18n="dataSummaryZero">0 prompts</strong>
+          <p data-i18n="importHelp">Imports are merged; prompts with the same ID use the most recently updated version.</p>
         </div>
       </section>
 
       <div id="toast" class="toast" role="status" aria-live="polite"></div>
     </main>
     <dialog id="versionPreview" aria-labelledby="previewHeading">
-      <header class="preview-heading"><strong id="previewHeading">版本预览</strong><button id="closePreviewButton" type="button" class="secondary" title="关闭预览" aria-label="关闭预览">×</button></header>
-      <textarea id="previewContent" aria-label="版本正文"></textarea>
+      <header class="preview-heading"><strong id="previewHeading" data-i18n="versionPreview">Version preview</strong><button id="closePreviewButton" type="button" class="secondary" data-i18n-title="closePreview" data-i18n-aria="closePreview">×</button></header>
+      <textarea id="previewContent" data-i18n-aria="versionBody"></textarea>
       <span id="previewFeedback" role="status"></span>
-      <footer class="preview-footer"><button id="deletePreviewButton" type="button" class="danger-text">删除</button><div class="preview-actions"><button id="copyPreviewButton" type="button" class="secondary">复制</button><button id="restorePreviewButton" type="button" class="secondary">恢复</button><button id="savePreviewButton" type="button" class="primary">保存</button></div></footer>
+      <footer class="preview-footer"><button id="deletePreviewButton" type="button" class="danger-text" data-i18n="delete">Delete</button><div class="preview-actions"><button id="copyPreviewButton" type="button" class="secondary" data-i18n="copy">Copy</button><button id="restorePreviewButton" type="button" class="secondary" data-i18n="restore">Restore</button><button id="savePreviewButton" type="button" class="primary" data-i18n="save">Save</button></div></footer>
     </dialog>
+    <script src="i18n.js"></script>
     <script src="popup.js"></script>
   </body>
 </html>

@@ -1,4 +1,6 @@
-# 提示词口袋 0.6.7
+# 提示词口袋 / Prompt Pocket 0.6.8
+
+0.6.8：新增完整简体中文和英文界面。浏览器界面语言为中文时显示中文，其他语言默认显示英文；扩展名称、说明、工具栏提示、管理页、侧边栏、悬浮球和操作反馈会自动切换，现有提示词数据保持原文。
 
 0.6.7：侧边栏预览支持快速编辑和保存新版本，可按版本号与修改时间查看历史正文、复制或恢复；修改自动同步到管理页历史记录，并保留多页冲突保护。
 
@@ -15,6 +17,20 @@
 本版基于 0.6.0，沿用本地提示词库与正文变更时新增版本的规则。原始 0.6.0 保存在 `versions/0.6.0`。
 
 开发者模式使用当前项目根目录；已加载此目录的用户直接重新加载扩展即可。
+
+## 界面预览 / Interface preview
+
+### 简体中文
+
+![提示词口袋中文侧边栏](store-assets/zh-CN/screenshot-1-side-panel-1280x800.png)
+
+![提示词口袋中文管理页](store-assets/zh-CN/screenshot-2-manager-1280x800.png)
+
+### English
+
+![Prompt Pocket side panel](store-assets/en-US/screenshot-1-side-panel-1280x800.png)
+
+![Prompt Pocket manager](store-assets/en-US/screenshot-2-manager-1280x800.png)
 
 ## 安装
 

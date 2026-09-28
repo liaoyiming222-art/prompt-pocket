@@ -64,7 +64,7 @@ chrome.runtime.onMessage.addListener((message, sender, respond) => {
     } else if (message.action === "page") {
       operation = (async () => {
         const [tab] = await chrome.tabs.query({ active: true, windowId: message.windowId });
-        if (!tab || (message.tabId != null && message.tabId !== tab.id)) throw Error("页面已切换，请重新操作");
+        if (!tab || (message.tabId != null && message.tabId !== tab.id)) throw Error(PromptPocketI18n.t("pageChanged"));
         const result = await chrome.tabs.sendMessage(tab.id, {
           channel: "prompt-pocket-control", action: message.operation, content: message.content,
         });
@@ -73,7 +73,7 @@ chrome.runtime.onMessage.addListener((message, sender, respond) => {
     } else return;
   } catch (error) { respond({ ok: false, error: error.message }); return; }
   Promise.resolve(operation).then(result => respond({ ok: true, ...result }))
-    .catch(error => respond({ ok: false, error: error.message || "当前网页不支持读取或插入" }));
+    .catch(error => respond({ ok: false, error: error.message || PromptPocketI18n.t("pageUnsupported") }));
   return true;
 });
 
@@ -81,7 +81,7 @@ chrome.runtime.onMessage.addListener((message, sender, respond) => {
 async function initializeOpenPages() {
   const tabs = await chrome.tabs.query({ url: ["http://*/*", "https://*/*"] });
   await Promise.all(tabs.map(tab => chrome.scripting.executeScript({
-    target: { tabId: tab.id }, files: ["content-widget.js"],
+    target: { tabId: tab.id }, files: ["i18n.js", "content-widget.js"],
   }).catch(() => {})));
 }
 chrome.runtime.onInstalled.addListener(initializeOpenPages);
