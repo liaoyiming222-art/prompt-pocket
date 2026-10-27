@@ -23,6 +23,14 @@
       "width": 420,
       "height": 470,
       "sha256": "0e85da1dfb5754c44900add296c464a0f8c81e5fba52f84fd3a7ec8f70a4f3e4"
+    },
+    {
+      "path": "sidebar-narrow.jpg",
+      "format": "JPEG",
+      "width": 320,
+      "height": 450,
+      "sha256": "0d9058028fa95446b5e528b722acf3fea1d1f0cee701c6ffa268462ac26590c9",
+      "use": "320px真实侧栏组件的宣传取景；保留搜索、保存和三条提示词，不表示手机安装扩展。"
     }
   ],
   "baseCommit": "b7454e0",
@@ -39,5 +47,6 @@
     "content-widget.js": "ba519e5489a466b9c305cfecf8f21365017c2f89a10075573189a84af6516367",
     "icons/brand.svg": "69fbcbc0037364d7e2f0c1889b22a01a1c76eee7433f0de09e25b6f1c60c6310"
   },
-  "environment": "只读HTTP工作台替代Chrome API；不运行在商店安装扩展中；原产品功能代码未修改以伪造结果。"
+  "environment": "只读HTTP工作台替代Chrome API；不运行在商店安装扩展中；原产品功能代码未修改以伪造结果。",
+  "refinedAt": "2026-10-27"
 }
