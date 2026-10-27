@@ -1,0 +1,43 @@
+{
+  "capturedAt": "2026-10-27",
+  "direction": "A：精致轻立体",
+  "kind": "真实产品组件的本地受控演示；Chrome API 由仅内存桥替代，非商店安装证明",
+  "images": [
+    {
+      "path": "history.jpg",
+      "format": "JPEG",
+      "width": 645,
+      "height": 495,
+      "sha256": "4bc677fd35cd64e3adaa229058c71277be3d83aa7b51c88cb1eb93a40629ea16"
+    },
+    {
+      "path": "manager.jpg",
+      "format": "JPEG",
+      "width": 1264,
+      "height": 892,
+      "sha256": "aecef878e1dd7d677bca1528ca5b0d3ef62419591c7941ab44a8eb64346a8ff8"
+    },
+    {
+      "path": "sidebar.jpg",
+      "format": "JPEG",
+      "width": 420,
+      "height": 470,
+      "sha256": "0e85da1dfb5754c44900add296c464a0f8c81e5fba52f84fd3a7ec8f70a4f3e4"
+    }
+  ],
+  "baseCommit": "b7454e0",
+  "version": "0.6.8",
+  "checks": {
+    "libraryPrompts": 3,
+    "versionsInLaunchBrief": 3,
+    "historyPreview": "V2"
+  },
+  "sourceSHA256": {
+    "background.js": "5c6df844710d5db7b3a63cb60fe33b166f11800c05ba6b232ad85852a4f1cab7",
+    "popup.html": "f37c439d7b0fc6ba450ffabba3363392ca1c202c38513be5cd692749726a65eb",
+    "popup.js": "aec80a55b717ac9e4c941cb86bdca45a5a125209b12d6326579f409c55ae7e69",
+    "content-widget.js": "ba519e5489a466b9c305cfecf8f21365017c2f89a10075573189a84af6516367",
+    "icons/brand.svg": "69fbcbc0037364d7e2f0c1889b22a01a1c76eee7433f0de09e25b6f1c60c6310"
+  },
+  "environment": "只读HTTP工作台替代Chrome API；不运行在商店安装扩展中；原产品功能代码未修改以伪造结果。"
+}

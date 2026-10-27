@@ -115,3 +115,6 @@ button:disabled { opacity: .45; cursor: not-allowed; }
 .standalone .view { max-width: 1200px; margin: 0 auto; padding: 24px; }
 .standalone .form-actions .grow { flex: none; min-width: 100px; margin-left: auto; }
 @media (max-width: 480px) { .standalone .view { padding: 16px; } }
+
+/* Product identity; the generated PNG shares icons/brand.svg as its source. */
+.brand-mark{background:transparent;box-shadow:none;border-radius:0}.brand-mark img{display:block;width:36px;height:36px;pointer-events:none}
