@@ -1,0 +1,34 @@
+{
+  "manifest_dimensions_formats_sha256": "passed",
+  "compositions": [
+    {
+      "image": "hero",
+      "composition_elements_inside_canvas": true
+    },
+    {
+      "image": "card",
+      "composition_elements_inside_canvas": true
+    },
+    {
+      "image": "mobile",
+      "composition_elements_inside_canvas": true
+    },
+    {
+      "image": "detail-01",
+      "composition_elements_inside_canvas": true
+    }
+  ],
+  "preview_widths": [
+    390,
+    960
+  ],
+  "icon_sizes": [
+    32,
+    40
+  ],
+  "icon_backgrounds": [
+    "light",
+    "dark"
+  ],
+  "visual_review": "See README for human-readable visual observations; generated previews in captures/qa-*"
+}

@@ -1,0 +1,242 @@
+{
+  "schema_version": 1,
+  "product_id": "prompt-pocket",
+  "product_name": "提示词口袋 / Prompt Pocket",
+  "repository": "https://github.com/liaoyiming222-art/prompt-pocket",
+  "branch": "main",
+  "product_version": "0.6.8",
+  "interface_code_commit": "a6d00f93e73377ddfda8d37958573df73872559d",
+  "asset_commit": "Resolve from the fixed Git commit containing this manifest; intentionally not self-referential",
+  "created_date": "2026-11-02",
+  "capabilities": [
+    "桌面Edge/Chrome本地提示词库",
+    "保存、搜索、插入与复制",
+    "正文编辑与版本历史、预览、复制、恢复",
+    "JSON导入导出",
+    "简体中文及英文界面"
+  ],
+  "boundaries": [
+    "仅桌面 Chromium 142+；mobile.webp仅供窄屏作品集展示，不表示手机安装",
+    "无账号、云同步、AI生成、AI分类、标签、文件夹或模板变量",
+    "iframe、受保护页面无法读取插入；复杂编辑器可能回退复制",
+    "宣传素材使用隔离浏览器配置中的虚构示例，无个人数据",
+    "真实运行未使用API模拟；sidebar.html以扩展页取景，不冒充原生侧栏外壳",
+    "本次验证限拍摄所涉及的保存、列表、三个版本与预览；未验证商店安装、所有网页插入或全功能回归"
+  ],
+  "capture": {
+    "code_commit": "a6d00f93e73377ddfda8d37958573df73872559d",
+    "version": "0.6.8",
+    "method": "Fresh-profile Edge unpacked extension; native storage and background handlers, no API bridge; sidebar.html opened as extension page, not browser side-panel chrome",
+    "fictional_examples": true,
+    "checks": {
+      "prompt_count": 3,
+      "version_count": 3,
+      "v2_body_verified": true
+    },
+    "page_errors": []
+  },
+  "assets": [
+    {
+      "path": "icon.svg",
+      "alt": "提示词口袋正式紫色引号卡片口袋图标",
+      "purpose": "产品图标与矢量母版",
+      "source": "Unmodified copy of ../../icons/brand.svg",
+      "width": 256,
+      "height": 256,
+      "format": "svg",
+      "sha256": "6d590cf4093afa53a1af77b41298e61785e7ad44e77540c9f3b546f7e209c20e"
+    },
+    {
+      "path": "icon-512.png",
+      "alt": "提示词口袋正式图标512像素透明背景版",
+      "purpose": "造物集产品图标",
+      "source": "icon.svg rendered with sharp at 512 × 512",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "sha256": "35c34895d18a058f2427e08079d4dfa761f81b503fc30b6fe642099b9338c871"
+    },
+    {
+      "path": "hero.webp",
+      "alt": "提示词口袋首页宣传图，紫色口袋图标、随手存随时用标题与真实提示词侧栏",
+      "purpose": "造物集首页展台",
+      "source": "layout.html + build.mjs; unretouched extension screenshots from captures/; HTML/CSS typography and composition, no generative service",
+      "width": 1920,
+      "height": 1200,
+      "format": "webp",
+      "sha256": "af854d593b4261f61b7238263ecd668e06e6e78043e1a185ffeb4fb590afdb89"
+    },
+    {
+      "path": "card.webp",
+      "alt": "提示词口袋作品卡片，左侧用途和本地保存功能短语，右侧真实提示词库侧栏",
+      "purpose": "造物集作品卡片",
+      "source": "layout.html + build.mjs; unretouched extension screenshots from captures/; HTML/CSS typography and composition, no generative service",
+      "width": 1200,
+      "height": 900,
+      "format": "webp",
+      "sha256": "f16ae71bf06d173a97fd5a5ccdfe80d2feb655f1fc42fe841913a600b5a3dbfd"
+    },
+    {
+      "path": "mobile.webp",
+      "alt": "用于手机浏览作品集的竖版宣传图，展示真实窄幅侧栏，注明仅为桌面浏览器扩展",
+      "purpose": "造物集窄屏展示，非手机安装入口",
+      "source": "layout.html + build.mjs; unretouched extension screenshots from captures/; HTML/CSS typography and composition, no generative service",
+      "width": 900,
+      "height": 1200,
+      "format": "webp",
+      "sha256": "93839fecb9f03ea9a914c39663918dbcd153200f2d310a217d14873dee2ab49d"
+    },
+    {
+      "path": "detail-01.webp",
+      "alt": "提示词口袋版本历史功能详情，展示管理页真实三个历史版本和V2正文预览，可复制或恢复",
+      "purpose": "关键功能详情：版本历史，与主图的提示词库列表不同",
+      "source": "layout.html + build.mjs; unretouched extension screenshots from captures/; HTML/CSS typography and composition, no generative service",
+      "width": 1920,
+      "height": 1200,
+      "format": "webp",
+      "sha256": "399ceb8b91e61019e422e2c5030144b005fe6d047af30f35cb87a6b21c950279"
+    }
+  ],
+  "supporting_images": [
+    {
+      "path": "captures/history-crop.png",
+      "width": 1052,
+      "height": 260,
+      "format": "png",
+      "sha256": "2ba2f482b21067076212634bf8459228df39bba2697a79f068b5099b355330fb",
+      "alt": "提示词口袋真实扩展界面采集：history-crop.png",
+      "purpose": "界面取景原始证据或无修饰矩形裁切",
+      "source": "build.mjs：manager.png矩形裁切"
+    },
+    {
+      "path": "captures/manager.png",
+      "width": 1100,
+      "height": 940,
+      "format": "png",
+      "sha256": "dd225629f26df4e2432c6190e434cb792ecfbf0ac4a4fd23c42205b51b00edd3",
+      "alt": "提示词口袋真实扩展界面采集：manager.png",
+      "purpose": "界面取景原始证据或无修饰矩形裁切",
+      "source": "capture.mjs：隔离配置中实际运行扩展的浏览器截图"
+    },
+    {
+      "path": "captures/qa-card-390.png",
+      "width": 390,
+      "height": 292,
+      "format": "png",
+      "sha256": "34b3a2ee196a56aef5897b684b0046a7b0cfb638bf0bcb829bad88b797c4e0d6",
+      "alt": "提示词口袋展示尺寸或图标清晰度检查图：qa-card-390.png",
+      "purpose": "制作检查证据，不作为作品集入口图",
+      "source": "verify.mjs：交付图等比缩放或32/40px图标检查"
+    },
+    {
+      "path": "captures/qa-card-960.png",
+      "width": 960,
+      "height": 720,
+      "format": "png",
+      "sha256": "753553b83af83ead55bfcc16e48a1a7c14e256c0dbd89047ee0575a7573888b0",
+      "alt": "提示词口袋展示尺寸或图标清晰度检查图：qa-card-960.png",
+      "purpose": "制作检查证据，不作为作品集入口图",
+      "source": "verify.mjs：交付图等比缩放或32/40px图标检查"
+    },
+    {
+      "path": "captures/qa-detail-01-390.png",
+      "width": 390,
+      "height": 244,
+      "format": "png",
+      "sha256": "142ddd2d80f2e78313ac484135025f6376f9446bb986718cca93c0e4b0f2ca03",
+      "alt": "提示词口袋展示尺寸或图标清晰度检查图：qa-detail-01-390.png",
+      "purpose": "制作检查证据，不作为作品集入口图",
+      "source": "verify.mjs：交付图等比缩放或32/40px图标检查"
+    },
+    {
+      "path": "captures/qa-detail-01-960.png",
+      "width": 960,
+      "height": 600,
+      "format": "png",
+      "sha256": "d9e508a6a972e9f2c3665ab691e0510f75ecaf9774c30a20a2a4f8ae8e71e20a",
+      "alt": "提示词口袋展示尺寸或图标清晰度检查图：qa-detail-01-960.png",
+      "purpose": "制作检查证据，不作为作品集入口图",
+      "source": "verify.mjs：交付图等比缩放或32/40px图标检查"
+    },
+    {
+      "path": "captures/qa-hero-390.png",
+      "width": 390,
+      "height": 244,
+      "format": "png",
+      "sha256": "6172d01c5df98d21d8d5842861f31a23b8487dab83c8e44c238991d9082a7f32",
+      "alt": "提示词口袋展示尺寸或图标清晰度检查图：qa-hero-390.png",
+      "purpose": "制作检查证据，不作为作品集入口图",
+      "source": "verify.mjs：交付图等比缩放或32/40px图标检查"
+    },
+    {
+      "path": "captures/qa-hero-960.png",
+      "width": 960,
+      "height": 600,
+      "format": "png",
+      "sha256": "e8785b11305084fcb79f650778e13be54abdfbf0d545e39c6f9c40daed44473d",
+      "alt": "提示词口袋展示尺寸或图标清晰度检查图：qa-hero-960.png",
+      "purpose": "制作检查证据，不作为作品集入口图",
+      "source": "verify.mjs：交付图等比缩放或32/40px图标检查"
+    },
+    {
+      "path": "captures/qa-icons.png",
+      "width": 600,
+      "height": 220,
+      "format": "png",
+      "sha256": "acca59d42d1292271b56372ab38b2d6eeaf82471692035e491ee7640c453f249",
+      "alt": "提示词口袋展示尺寸或图标清晰度检查图：qa-icons.png",
+      "purpose": "制作检查证据，不作为作品集入口图",
+      "source": "verify.mjs：交付图等比缩放或32/40px图标检查"
+    },
+    {
+      "path": "captures/qa-mobile-390.png",
+      "width": 390,
+      "height": 520,
+      "format": "png",
+      "sha256": "7bee9bcf9efb3321d27dc937641e7c671bf040e23d373aa357b2429625a250d4",
+      "alt": "提示词口袋展示尺寸或图标清晰度检查图：qa-mobile-390.png",
+      "purpose": "制作检查证据，不作为作品集入口图",
+      "source": "verify.mjs：交付图等比缩放或32/40px图标检查"
+    },
+    {
+      "path": "captures/qa-mobile-960.png",
+      "width": 960,
+      "height": 1280,
+      "format": "png",
+      "sha256": "936c5813185003299db34349c520e13576be412c9e881656d2b1012b1481eb43",
+      "alt": "提示词口袋展示尺寸或图标清晰度检查图：qa-mobile-960.png",
+      "purpose": "制作检查证据，不作为作品集入口图",
+      "source": "verify.mjs：交付图等比缩放或32/40px图标检查"
+    },
+    {
+      "path": "captures/sidebar-narrow.png",
+      "width": 360,
+      "height": 600,
+      "format": "png",
+      "sha256": "0ae69c905d47af61d02a6ed91a7137cd0654f60b7417e682978f07bb39a8e14f",
+      "alt": "提示词口袋真实扩展界面采集：sidebar-narrow.png",
+      "purpose": "界面取景原始证据或无修饰矩形裁切",
+      "source": "capture.mjs：隔离配置中实际运行扩展的浏览器截图"
+    },
+    {
+      "path": "captures/sidebar.png",
+      "width": 440,
+      "height": 590,
+      "format": "png",
+      "sha256": "9951bfb85ff07d566b0b87c72277cb9d9b18b5c86b026893c9d9b9ff0e942886",
+      "alt": "提示词口袋真实扩展界面采集：sidebar.png",
+      "purpose": "界面取景原始证据或无修饰矩形裁切",
+      "source": "capture.mjs：隔离配置中实际运行扩展的浏览器截图"
+    },
+    {
+      "path": "captures/version.png",
+      "width": 620,
+      "height": 522,
+      "format": "png",
+      "sha256": "e217f86f8d1b6dcc5b8633a242a7bfeb383d2f0244e9c1820c5f5ae8db60461b",
+      "alt": "提示词口袋真实扩展界面采集：version.png",
+      "purpose": "界面取景原始证据或无修饰矩形裁切",
+      "source": "capture.mjs：隔离配置中实际运行扩展的浏览器截图"
+    }
+  ]
+}

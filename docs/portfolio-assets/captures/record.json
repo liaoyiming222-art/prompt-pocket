@@ -1,0 +1,12 @@
+{
+  "code_commit": "a6d00f93e73377ddfda8d37958573df73872559d",
+  "version": "0.6.8",
+  "method": "Fresh-profile Edge unpacked extension; native storage and background handlers, no API bridge; sidebar.html opened as extension page, not browser side-panel chrome",
+  "fictional_examples": true,
+  "checks": {
+    "prompt_count": 3,
+    "version_count": 3,
+    "v2_body_verified": true
+  },
+  "page_errors": []
+}
