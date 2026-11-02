@@ -1,0 +1,4 @@
+# Preserve the exact source bytes recorded in manifest.json across platforms.
+*.svg binary
+*.png -text
+*.webp -text
