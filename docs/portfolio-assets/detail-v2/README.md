@@ -2,9 +2,9 @@
 
 任务编号：detail-v2-20261104-prompt-pocket。2026-11-04。产品 ID：prompt-pocket。
 
-仓库：https://github.com/liaoyiming222-art/prompt-pocket  
-素材分支：codex/detail-v2-20261104  
-完整拍摄代码 SHA：f1216008752b1e2c2ea3b4ae582a77fd2700bc74  
+仓库：https://github.com/liaoyiming222-art/prompt-pocket
+素材分支：codex/detail-v2-20261104
+完整拍摄代码 SHA：f1216008752b1e2c2ea3b4ae582a77fd2700bc74
 与 A 段界面基线 a6d00f93e73377ddfda8d37958573df73872559d 的产品代码相同。版本 0.6.8；实际浏览器 Edge 156.0.4314.58。拍摄前逐文件核对产品代码与固定提交一致，仅忽略 Git 在 Windows 的换行差异。
 
 源目录 main 的 output/、tmp/ 未跟踪内容保留；在独立 worktree 拍摄和提交，未纳入任何用户工作区内容。未改业务代码、权限、部署、旧 hero/card/icon 或造物集仓库。本目录仅交本轮9张详情成品及必要证据、文档与复现文件。
@@ -60,4 +60,3 @@ node docs/portfolio-assets/detail-v2/verify.mjs
 已有依赖可通过 PORTFOLIO_MODULES 指定依赖目录，浏览器通过 BROWSER_PATH 指定；默认使用标准位置 Edge。不依赖作者项目绝对路径或外站资源。make 首先验证拍摄代码与基线一致；成功后关闭并删除本次临时浏览器配置。原始截图的时间由产品实际生成，重拍时间、版本 ID 会变化。
 
 最终素材提交 SHA 由回执给出，不循环写入自身 manifest。只在独立素材分支上传，造物集接入由总控后续执行。
-

@@ -23,4 +23,3 @@ for(const name of (await fs.readdir(f('evidence'))).filter(n=>n.endsWith('.png')
 m.supporting_images=sources;await fs.writeFile(f('manifest.json'),JSON.stringify(m,null,2)+'\n');
 await fs.writeFile(f('verification.json'),JSON.stringify({date:'2026-11-04',results,visual_review:{no_fake_UI:true,nine_specified_images:true,no_stretch:true,original_data_retained:true,known_gaps:['原生侧栏与网页同场未取得，采用独立扩展页回退','预览覆盖侧栏搜索属真实产品行为；搜索另图展示','历史列表无选中行样式，以V2预览按钮真实焦点关联','288px展示时列表版本小字约11–12px，低于约14px建议目标；请保留自然高度并支持原图查看，页面接入后复核'],insertion_mobile:'独立取受控网页结果区，保留原文、完整插入正文及来源；浮球实际拖至取景外'}},null,2)+'\n');
 console.log('PASS: 9 image dimensions/formats/hashes and original captures; generated 288/358 and 829/1184px review previews');
-

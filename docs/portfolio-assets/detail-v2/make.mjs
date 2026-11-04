@@ -9,7 +9,7 @@ import {execFileSync} from 'node:child_process';
 import {chromium,sharp,browserPath} from '../runtime.mjs';
 const dir=path.dirname(fileURLToPath(import.meta.url)),root=path.resolve(dir,'../../..');
 const baseline='f1216008752b1e2c2ea3b4ae582a77fd2700bc74';
-for(const name of ['background.js','content-widget.js','sidebar-background.js','popup.js','popup.css','popup.html','sidebar.html','i18n.js','manifest.json'])assert.equal((await fs.readFile(path.join(root,name),'utf8')).replaceAll('\r\n','\n'),execFileSync('git',['show',baseline+':'+name],{cwd:root,encoding:'utf8'}).replaceAll('\r\n','\n')); 
+for(const name of ['background.js','content-widget.js','sidebar-background.js','popup.js','popup.css','popup.html','sidebar.html','i18n.js','manifest.json'])assert.equal((await fs.readFile(path.join(root,name),'utf8')).replaceAll('\r\n','\n'),execFileSync('git',['show',baseline+':'+name],{cwd:root,encoding:'utf8'}).replaceAll('\r\n','\n'));
 await fs.mkdir(path.join(dir,'evidence'),{recursive:true});
 const file=n=>path.join(dir,n),hash=b=>crypto.createHash('sha256').update(b).digest('hex');
 const fixture=await fs.readFile(file('writing-demo.html'));
@@ -55,7 +55,7 @@ try{
  checks.insertion={method:'Actual installed content-script insert operation via chrome.tabs.sendMessage; focused real textarea, no response mock',before,after:before+versions[2],ok:true};
  await save(web,'insert-desktop',1600,1200,'展览介绍提示词插入桌面写作输入框后的实际结果','模块3；受控网页textarea真实插入，保留原有文字','controlled-webpage-real-insertion');
  await web.setViewportSize({width:300,height:600}); const orb=await web.locator("#prompt-pocket-host").boundingBox(); await web.mouse.move(orb.x+26,orb.y+26);await web.mouse.down();await web.mouse.move(260,30,{steps:8});await web.mouse.up();await web.evaluate(()=>getSelection()?.removeAllRanges());
- await save(web,'insert-mobile',900,1200,'桌面写作输入区局部，显示插入的展览介绍提示词与原有文字','模块3窄屏；桌面网页操作局部','controlled-webpage-real-insertion',web.locator('#result')); 
+ await save(web,'insert-mobile',900,1200,'桌面写作输入区局部，显示插入的展览介绍提示词与原有文字','模块3窄屏；桌面网页操作局部','controlled-webpage-real-insertion',web.locator('#result'));
  for(const mobile of [false,true]){
   await manager.setViewportSize({width:mobile?300:800,height:mobile?730:750});
   await manager.locator('.version-item').nth(1).getByRole('button',{name:'预览',exact:true}).click();
@@ -72,4 +72,3 @@ try{
  await fs.writeFile(file('manifest.json'),JSON.stringify({schema_version:2,product_id:'prompt-pocket',repository:'https://github.com/liaoyiming222-art/prompt-pocket',branch:'codex/detail-v2-20261104',code_commit:baseline,task_id:record.task_id,primary_image_count:9,record:'record.json',boundaries:['仅桌面Chromium142+；mobile为桌面局部，不代表手机安装','无账号、云同步或AI生成','仅受控textarea插入验证；不声称所有网站兼容','历史仅查看；未执行恢复与JSON备份','主视觉为独立扩展页回退；未取得网页与原生侧栏同场','列表没有原生选中行；V2预览按钮焦点对应正文图'],assets},null,2)+'\n');
  console.log('Captured 9 actual UI states',record.browser,checks);
 }finally{await ctx.close();await new Promise(r=>server.close(r));await fs.rm(profile,{recursive:true,force:true})}
-
