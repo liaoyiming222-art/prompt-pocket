@@ -1,0 +1,30 @@
+{
+  "task_id": "detail-v2-20261104-prompt-pocket",
+  "code_commit": "f1216008752b1e2c2ea3b4ae582a77fd2700bc74",
+  "interface_equivalent_commit": "a6d00f93e73377ddfda8d37958573df73872559d",
+  "browser": "156.0.4314.58",
+  "date": "2026-11-04",
+  "source_worktree_state": "main at f121600 with untracked output/ and tmp/ preserved; captured from clean isolated worktree",
+  "examples": {
+    "title": "展览介绍写作",
+    "versions": [
+      "请为虚构的社区展览写一段介绍，说明主题和参观对象。",
+      "请为虚构的社区展览写一段介绍，说明主题、参观对象和两项看点。",
+      "请为虚构的社区展览写一段介绍，说明主题、参观对象和两项看点。控制在150字以内，语气亲切。"
+    ]
+  },
+  "checks": {
+    "three_versions_saved_via_real_manager": true,
+    "actual_saved_search_hit": true,
+    "insertion": {
+      "method": "Actual installed content-script insert operation via chrome.tabs.sendMessage; focused real textarea, no response mock",
+      "before": "本次展览面向社区读者。\n\n",
+      "after": "本次展览面向社区读者。\n\n请为虚构的社区展览写一段介绍，说明主题、参观对象和两项看点。控制在150字以内，语气亲切。",
+      "ok": true
+    },
+    "v2_preview_matches_saved_body": true,
+    "no_restore_or_backup_claim": true
+  },
+  "page_errors": [],
+  "native_context_gap": "原生侧栏外壳未截图；主视觉按授权回退为真实独立扩展页，不拼接网页或伪造浏览器布局"
+}

@@ -1,0 +1,463 @@
+{
+  "schema_version": 2,
+  "product_id": "prompt-pocket",
+  "repository": "https://github.com/liaoyiming222-art/prompt-pocket",
+  "branch": "codex/detail-v2-20261104",
+  "code_commit": "f1216008752b1e2c2ea3b4ae582a77fd2700bc74",
+  "task_id": "detail-v2-20261104-prompt-pocket",
+  "primary_image_count": 9,
+  "record": "record.json",
+  "boundaries": [
+    "仅桌面Chromium142+；mobile为桌面局部，不代表手机安装",
+    "无账号、云同步或AI生成",
+    "仅受控textarea插入验证；不声称所有网站兼容",
+    "历史仅查看；未执行恢复与JSON备份",
+    "主视觉为独立扩展页回退；未取得网页与原生侧栏同场",
+    "列表没有原生选中行；V2预览按钮焦点对应正文图"
+  ],
+  "assets": [
+    {
+      "path": "prompt-pocket-context-desktop.webp",
+      "width": 1920,
+      "height": 1200,
+      "format": "webp",
+      "sha256": "ea665c32fbc598daa8bdb67783eaac237ab4fa7843fce566fb0f3b5e936d027b",
+      "alt": "提示词口袋独立桌面扩展页，显示展览介绍写作的正文预览",
+      "scene": "模块1；独立扩展页取景，未取得原生侧栏与网页同场",
+      "source_type": "real-extension-page",
+      "source": "evidence/context-desktop.png",
+      "limits": "真实独立扩展页局部；不代表手机安装或原生侧栏外壳",
+      "capture": {
+        "path": "evidence/context-desktop.png",
+        "width": 800,
+        "height": 1068,
+        "sha256": "3b2af8a8da8b30bec4bff9ad0c166e087e16b3b4582730b0d86c3ee1dcee790c",
+        "format": "png"
+      }
+    },
+    {
+      "path": "prompt-pocket-context-mobile.webp",
+      "width": 900,
+      "height": 1200,
+      "format": "webp",
+      "sha256": "f4b9ab2b05a6c1d84347f0597061e51919ddcad5b91c098671dc67b6182b1704",
+      "alt": "桌面扩展侧栏局部，显示展览介绍提示词的标题和正文",
+      "scene": "模块1窄屏；桌面插件局部",
+      "source_type": "real-extension-page",
+      "source": "evidence/context-mobile.png",
+      "limits": "真实独立扩展页局部；不代表手机安装或原生侧栏外壳",
+      "capture": {
+        "path": "evidence/context-mobile.png",
+        "width": 600,
+        "height": 800,
+        "sha256": "ede3c1f9e343be114f062aed25e43e847b14f07b5ede27b85bc55263f4ca8ab6",
+        "format": "png"
+      }
+    },
+    {
+      "path": "prompt-pocket-search-shared.webp",
+      "width": 900,
+      "height": 1200,
+      "format": "webp",
+      "sha256": "f5ee6019008786c16eb173d2868713927ed622f430e0709fe04ea683b81ce69b",
+      "alt": "提示词口袋侧栏以展览关键词搜到已保存的展览介绍提示词",
+      "scene": "模块2；真实保存后关键词命中",
+      "source_type": "real-extension-page",
+      "source": "evidence/search-shared.png",
+      "limits": "真实独立扩展页局部；不代表手机安装或原生侧栏外壳",
+      "capture": {
+        "path": "evidence/search-shared.png",
+        "width": 600,
+        "height": 800,
+        "sha256": "e908a072af0470d6ac6bcb1bb3f8f49796f86d3e6bad6024e03aec66fb67157c",
+        "format": "png"
+      }
+    },
+    {
+      "path": "prompt-pocket-insert-desktop.webp",
+      "width": 1600,
+      "height": 1200,
+      "format": "webp",
+      "sha256": "745232dffdb05c1a0a207e3a0967519e8b7b4775b6c70520af01fd2d83d539e8",
+      "alt": "展览介绍提示词插入桌面写作输入框后的实际结果",
+      "scene": "模块3；受控网页textarea真实插入，保留原有文字",
+      "source_type": "controlled-webpage-real-insertion",
+      "source": "evidence/insert-desktop.png",
+      "limits": "受控虚构网页的真实输入结果；仅验证普通textarea",
+      "capture": {
+        "path": "evidence/insert-desktop.png",
+        "width": 1600,
+        "height": 1200,
+        "sha256": "7828e1ba267e2936de22eea55aca8dbcfb0e4eb34eba55260074eaafe17816a9",
+        "format": "png"
+      }
+    },
+    {
+      "path": "prompt-pocket-insert-mobile.webp",
+      "width": 900,
+      "height": 1200,
+      "format": "webp",
+      "sha256": "66f6731e603a0caf78e8febe4899be598aba5dc7d030f292c70f6f6745948443",
+      "alt": "桌面写作输入区局部，显示插入的展览介绍提示词与原有文字",
+      "scene": "模块3窄屏；桌面网页操作局部",
+      "source_type": "controlled-webpage-real-insertion",
+      "source": "evidence/insert-mobile.png",
+      "limits": "受控虚构网页的真实输入结果；仅验证普通textarea",
+      "capture": {
+        "path": "evidence/insert-mobile.png",
+        "width": 520,
+        "height": 810,
+        "sha256": "6c6b95177694bd015acddaafeeca39c7c43a1d054a4b59b8bc0ce741b156af62",
+        "format": "png"
+      }
+    },
+    {
+      "path": "prompt-pocket-history-preview-desktop.webp",
+      "width": 1600,
+      "height": 1200,
+      "format": "webp",
+      "sha256": "f75d96a86eb9b171f7a8111c1d0e6cb9490f94a0f092e7e54212407f2c8fb99a",
+      "alt": "选中旧版本V2的展览介绍提示词正文预览及版本标识",
+      "scene": "模块4；V2旧版查看状态，完整短样本",
+      "source_type": "real-extension-page",
+      "source": "evidence/history-preview-desktop.png",
+      "limits": "真实独立扩展页局部；不代表手机安装或原生侧栏外壳",
+      "capture": {
+        "path": "evidence/history-preview-desktop.png",
+        "width": 1240,
+        "height": 892,
+        "sha256": "429dea08e3b88984fd7ebb968793750307ce44de707146d9d85dae1ddf013cce",
+        "format": "png"
+      }
+    },
+    {
+      "path": "prompt-pocket-history-list-desktop.webp",
+      "width": 1600,
+      "height": 1200,
+      "format": "webp",
+      "sha256": "9848a8f5f36649eab6eb2c4025a809a509c697bbc42c0da2bcf63b2004f975ad",
+      "alt": "桌面管理页三个正文版本；V2预览按钮获得焦点，与旧版正文图对应",
+      "scene": "模块4；真实三个版本，V2预览控制获得焦点；原产品无选中行样式",
+      "source_type": "real-extension-page",
+      "source": "evidence/history-list-desktop.png",
+      "limits": "真实独立扩展页局部；不代表手机安装或原生侧栏外壳",
+      "capture": {
+        "path": "evidence/history-list-desktop.png",
+        "width": 1504,
+        "height": 520,
+        "sha256": "1948a28e57ad8345819d6f9f376f6e3ff9b79131b7116e475e9caa5afc4c9493",
+        "format": "png"
+      }
+    },
+    {
+      "path": "prompt-pocket-history-preview-mobile.webp",
+      "width": 900,
+      "height": 1200,
+      "format": "webp",
+      "sha256": "5c5b33cebe1e93c8a54530ef4b5d355792dbfd47ec95102f78516d684c30af42",
+      "alt": "选中旧版本V2的展览介绍提示词正文预览及版本标识",
+      "scene": "模块4；V2旧版查看状态，完整短样本",
+      "source_type": "real-extension-page",
+      "source": "evidence/history-preview-mobile.png",
+      "limits": "真实独立扩展页局部；不代表手机安装或原生侧栏外壳",
+      "capture": {
+        "path": "evidence/history-preview-mobile.png",
+        "width": 536,
+        "height": 876,
+        "sha256": "5992cbf7d47b559041fa91dd5dbd46ddc01a977a2d9577c54a48236b8cb67c68",
+        "format": "png"
+      }
+    },
+    {
+      "path": "prompt-pocket-history-list-mobile.webp",
+      "width": 900,
+      "height": 1200,
+      "format": "webp",
+      "sha256": "55d89d984edc046c4cf329d22cdc32ea42851f333959b1e0ce842239cf02f0b2",
+      "alt": "桌面管理页三个正文版本；V2预览按钮获得焦点，与旧版正文图对应",
+      "scene": "模块4；真实三个版本，V2预览控制获得焦点；原产品无选中行样式",
+      "source_type": "real-extension-page",
+      "source": "evidence/history-list-mobile.png",
+      "limits": "真实独立扩展页局部；不代表手机安装或原生侧栏外壳",
+      "capture": {
+        "path": "evidence/history-list-mobile.png",
+        "width": 536,
+        "height": 778,
+        "sha256": "abe1c52597ca26f6008fd2e7cce93c9f0bef93f76ea1a5cba8d5d61040582e59",
+        "format": "png"
+      }
+    }
+  ],
+  "supporting_images": [
+    {
+      "path": "evidence/check-prompt-pocket-context-desktop-1184.png",
+      "width": 1184,
+      "height": 740,
+      "format": "png",
+      "sha256": "73e160e017e13674b58445e3210cde655686436be9a83a9fd2b9db608e5161d6",
+      "alt": "目标展示宽度检查图：check-prompt-pocket-context-desktop-1184.png",
+      "source_type": "uniform-downscale-for-review",
+      "purpose": "制作验证证据，不是额外成品"
+    },
+    {
+      "path": "evidence/check-prompt-pocket-context-desktop-829.png",
+      "width": 829,
+      "height": 518,
+      "format": "png",
+      "sha256": "c89fd1d8a2f6f352a99040fbfe12df7ef5f80da978dfec427cf917f7e7d21aab",
+      "alt": "目标展示宽度检查图：check-prompt-pocket-context-desktop-829.png",
+      "source_type": "uniform-downscale-for-review",
+      "purpose": "制作验证证据，不是额外成品"
+    },
+    {
+      "path": "evidence/check-prompt-pocket-context-mobile-288.png",
+      "width": 288,
+      "height": 384,
+      "format": "png",
+      "sha256": "77289dbd28c974dc69e829847d2e4df0c921dc0628ba2748f1b8fe139f30f313",
+      "alt": "目标展示宽度检查图：check-prompt-pocket-context-mobile-288.png",
+      "source_type": "uniform-downscale-for-review",
+      "purpose": "制作验证证据，不是额外成品"
+    },
+    {
+      "path": "evidence/check-prompt-pocket-context-mobile-358.png",
+      "width": 358,
+      "height": 477,
+      "format": "png",
+      "sha256": "aea5cb7a48fed3d3e5cf05812ad016b8135ff65d0c63f99b3115c96a09da0d1a",
+      "alt": "目标展示宽度检查图：check-prompt-pocket-context-mobile-358.png",
+      "source_type": "uniform-downscale-for-review",
+      "purpose": "制作验证证据，不是额外成品"
+    },
+    {
+      "path": "evidence/check-prompt-pocket-history-list-desktop-1184.png",
+      "width": 1184,
+      "height": 888,
+      "format": "png",
+      "sha256": "01e717f9c18c4208bce07c26ea1f5d77583fccd034d2f9df3f34e57fe55c6e1a",
+      "alt": "目标展示宽度检查图：check-prompt-pocket-history-list-desktop-1184.png",
+      "source_type": "uniform-downscale-for-review",
+      "purpose": "制作验证证据，不是额外成品"
+    },
+    {
+      "path": "evidence/check-prompt-pocket-history-list-desktop-829.png",
+      "width": 829,
+      "height": 622,
+      "format": "png",
+      "sha256": "3b316a6f8686eb20dcb6187a2752db87c74a1bf91983bac16b31a8832d63e125",
+      "alt": "目标展示宽度检查图：check-prompt-pocket-history-list-desktop-829.png",
+      "source_type": "uniform-downscale-for-review",
+      "purpose": "制作验证证据，不是额外成品"
+    },
+    {
+      "path": "evidence/check-prompt-pocket-history-list-mobile-288.png",
+      "width": 288,
+      "height": 384,
+      "format": "png",
+      "sha256": "7d390233d1b5ab312752d949e875039b189896966e002f03f818dafe2088f08b",
+      "alt": "目标展示宽度检查图：check-prompt-pocket-history-list-mobile-288.png",
+      "source_type": "uniform-downscale-for-review",
+      "purpose": "制作验证证据，不是额外成品"
+    },
+    {
+      "path": "evidence/check-prompt-pocket-history-list-mobile-358.png",
+      "width": 358,
+      "height": 477,
+      "format": "png",
+      "sha256": "c061ed6cc40a84f0b136a9d58ba2cd99f8241712f2ecb206e88307f8d029573d",
+      "alt": "目标展示宽度检查图：check-prompt-pocket-history-list-mobile-358.png",
+      "source_type": "uniform-downscale-for-review",
+      "purpose": "制作验证证据，不是额外成品"
+    },
+    {
+      "path": "evidence/check-prompt-pocket-history-preview-desktop-1184.png",
+      "width": 1184,
+      "height": 888,
+      "format": "png",
+      "sha256": "186dafc784176ce5ef98ae2c759d4f00886ada7bbe2e718f28f99b1e7568425a",
+      "alt": "目标展示宽度检查图：check-prompt-pocket-history-preview-desktop-1184.png",
+      "source_type": "uniform-downscale-for-review",
+      "purpose": "制作验证证据，不是额外成品"
+    },
+    {
+      "path": "evidence/check-prompt-pocket-history-preview-desktop-829.png",
+      "width": 829,
+      "height": 622,
+      "format": "png",
+      "sha256": "b429343b59b316c3d6c280d3923fdca72fe73ba5a749f81a79f63821fcbfa7b9",
+      "alt": "目标展示宽度检查图：check-prompt-pocket-history-preview-desktop-829.png",
+      "source_type": "uniform-downscale-for-review",
+      "purpose": "制作验证证据，不是额外成品"
+    },
+    {
+      "path": "evidence/check-prompt-pocket-history-preview-mobile-288.png",
+      "width": 288,
+      "height": 384,
+      "format": "png",
+      "sha256": "5c377e6f9a8aeba2ac6578192d6d0a2abbf260f87af9293c1cc6119bee9c451a",
+      "alt": "目标展示宽度检查图：check-prompt-pocket-history-preview-mobile-288.png",
+      "source_type": "uniform-downscale-for-review",
+      "purpose": "制作验证证据，不是额外成品"
+    },
+    {
+      "path": "evidence/check-prompt-pocket-history-preview-mobile-358.png",
+      "width": 358,
+      "height": 477,
+      "format": "png",
+      "sha256": "2fdebc30a9b24e6b4af3ebac766be16297bccd45fc28ec6048df10fc4a419d2a",
+      "alt": "目标展示宽度检查图：check-prompt-pocket-history-preview-mobile-358.png",
+      "source_type": "uniform-downscale-for-review",
+      "purpose": "制作验证证据，不是额外成品"
+    },
+    {
+      "path": "evidence/check-prompt-pocket-insert-desktop-1184.png",
+      "width": 1184,
+      "height": 888,
+      "format": "png",
+      "sha256": "86294fcc90575d58f9fcfec2151f7e119b95f45e0c13f91a91d006495d4c1a2c",
+      "alt": "目标展示宽度检查图：check-prompt-pocket-insert-desktop-1184.png",
+      "source_type": "uniform-downscale-for-review",
+      "purpose": "制作验证证据，不是额外成品"
+    },
+    {
+      "path": "evidence/check-prompt-pocket-insert-desktop-829.png",
+      "width": 829,
+      "height": 622,
+      "format": "png",
+      "sha256": "001cc30df88b3b84a90ff6d28720fffdee9fdf1c7aeac6ee1aa6aa9f3979bb2b",
+      "alt": "目标展示宽度检查图：check-prompt-pocket-insert-desktop-829.png",
+      "source_type": "uniform-downscale-for-review",
+      "purpose": "制作验证证据，不是额外成品"
+    },
+    {
+      "path": "evidence/check-prompt-pocket-insert-mobile-288.png",
+      "width": 288,
+      "height": 384,
+      "format": "png",
+      "sha256": "f9af74c15b1ec1b6cf9aedc470ce9ba1d0472a5e3b1bd5c6fef315aa34c61e80",
+      "alt": "目标展示宽度检查图：check-prompt-pocket-insert-mobile-288.png",
+      "source_type": "uniform-downscale-for-review",
+      "purpose": "制作验证证据，不是额外成品"
+    },
+    {
+      "path": "evidence/check-prompt-pocket-insert-mobile-358.png",
+      "width": 358,
+      "height": 477,
+      "format": "png",
+      "sha256": "29655f7141eb974df944b955046136c1e384c6fbcdb1e21008200d922d0599ee",
+      "alt": "目标展示宽度检查图：check-prompt-pocket-insert-mobile-358.png",
+      "source_type": "uniform-downscale-for-review",
+      "purpose": "制作验证证据，不是额外成品"
+    },
+    {
+      "path": "evidence/check-prompt-pocket-search-shared-288.png",
+      "width": 288,
+      "height": 384,
+      "format": "png",
+      "sha256": "72d32c27b8436e9a63df8683d3785e29b2d3f96e9e4ebbd01c5ed330362cb032",
+      "alt": "目标展示宽度检查图：check-prompt-pocket-search-shared-288.png",
+      "source_type": "uniform-downscale-for-review",
+      "purpose": "制作验证证据，不是额外成品"
+    },
+    {
+      "path": "evidence/check-prompt-pocket-search-shared-358.png",
+      "width": 358,
+      "height": 477,
+      "format": "png",
+      "sha256": "677ba4efd73c47456cd03fd4ab8b960f0a4ad944eb1ce891134db90465615c42",
+      "alt": "目标展示宽度检查图：check-prompt-pocket-search-shared-358.png",
+      "source_type": "uniform-downscale-for-review",
+      "purpose": "制作验证证据，不是额外成品"
+    },
+    {
+      "path": "evidence/context-desktop.png",
+      "width": 800,
+      "height": 1068,
+      "format": "png",
+      "sha256": "3b2af8a8da8b30bec4bff9ad0c166e087e16b3b4582730b0d86c3ee1dcee790c",
+      "alt": "真实界面原始采集：context-desktop.png",
+      "source_type": "capture-or-contact-sheet",
+      "purpose": "制作验证证据，不是额外成品"
+    },
+    {
+      "path": "evidence/context-mobile.png",
+      "width": 600,
+      "height": 800,
+      "format": "png",
+      "sha256": "ede3c1f9e343be114f062aed25e43e847b14f07b5ede27b85bc55263f4ca8ab6",
+      "alt": "真实界面原始采集：context-mobile.png",
+      "source_type": "capture-or-contact-sheet",
+      "purpose": "制作验证证据，不是额外成品"
+    },
+    {
+      "path": "evidence/history-list-desktop.png",
+      "width": 1504,
+      "height": 520,
+      "format": "png",
+      "sha256": "1948a28e57ad8345819d6f9f376f6e3ff9b79131b7116e475e9caa5afc4c9493",
+      "alt": "真实界面原始采集：history-list-desktop.png",
+      "source_type": "capture-or-contact-sheet",
+      "purpose": "制作验证证据，不是额外成品"
+    },
+    {
+      "path": "evidence/history-list-mobile.png",
+      "width": 536,
+      "height": 778,
+      "format": "png",
+      "sha256": "abe1c52597ca26f6008fd2e7cce93c9f0bef93f76ea1a5cba8d5d61040582e59",
+      "alt": "真实界面原始采集：history-list-mobile.png",
+      "source_type": "capture-or-contact-sheet",
+      "purpose": "制作验证证据，不是额外成品"
+    },
+    {
+      "path": "evidence/history-preview-desktop.png",
+      "width": 1240,
+      "height": 892,
+      "format": "png",
+      "sha256": "429dea08e3b88984fd7ebb968793750307ce44de707146d9d85dae1ddf013cce",
+      "alt": "真实界面原始采集：history-preview-desktop.png",
+      "source_type": "capture-or-contact-sheet",
+      "purpose": "制作验证证据，不是额外成品"
+    },
+    {
+      "path": "evidence/history-preview-mobile.png",
+      "width": 536,
+      "height": 876,
+      "format": "png",
+      "sha256": "5992cbf7d47b559041fa91dd5dbd46ddc01a977a2d9577c54a48236b8cb67c68",
+      "alt": "真实界面原始采集：history-preview-mobile.png",
+      "source_type": "capture-or-contact-sheet",
+      "purpose": "制作验证证据，不是额外成品"
+    },
+    {
+      "path": "evidence/insert-desktop.png",
+      "width": 1600,
+      "height": 1200,
+      "format": "png",
+      "sha256": "7828e1ba267e2936de22eea55aca8dbcfb0e4eb34eba55260074eaafe17816a9",
+      "alt": "真实界面原始采集：insert-desktop.png",
+      "source_type": "capture-or-contact-sheet",
+      "purpose": "制作验证证据，不是额外成品"
+    },
+    {
+      "path": "evidence/insert-mobile.png",
+      "width": 520,
+      "height": 810,
+      "format": "png",
+      "sha256": "6c6b95177694bd015acddaafeeca39c7c43a1d054a4b59b8bc0ce741b156af62",
+      "alt": "真实界面原始采集：insert-mobile.png",
+      "source_type": "capture-or-contact-sheet",
+      "purpose": "制作验证证据，不是额外成品"
+    },
+    {
+      "path": "evidence/search-shared.png",
+      "width": 600,
+      "height": 800,
+      "format": "png",
+      "sha256": "e908a072af0470d6ac6bcb1bb3f8f49796f86d3e6bad6024e03aec66fb67157c",
+      "alt": "真实界面原始采集：search-shared.png",
+      "source_type": "capture-or-contact-sheet",
+      "purpose": "制作验证证据，不是额外成品"
+    }
+  ]
+}
