@@ -1,5 +1,27 @@
 {
   "date": "2026-11-04",
+  "revision": {
+    "task_id": "detail-v2-20261104-prompt-pocket-r1",
+    "original_task_id": "detail-v2-20261104-prompt-pocket",
+    "original_asset_commit": "3fad26caa1ae3359845724d376177b41caca8929",
+    "record": "revision-r1.json",
+    "changed_primary_images": [
+      "prompt-pocket-history-list-mobile.webp",
+      "prompt-pocket-history-preview-mobile.webp"
+    ]
+  },
+  "readability_r1": {
+    "minimum_font_size": 25,
+    "tab_zoom": 1,
+    "list_viewport_width": 500,
+    "preview_viewport_width": 400,
+    "list_key_font_estimate_at_288": 15.93,
+    "preview_body_font_estimate_at_288": 19.57,
+    "method": "Native browser minimum-font preference; proportional width mapping, not exact ink-height measurement",
+    "list_all_three_versions_and_v2_focus_visible": true,
+    "preview_full_v2_title_and_body_visible": true,
+    "other_seven_primary_images_unchanged": true
+  },
   "results": [
     {
       "path": "prompt-pocket-context-desktop.webp",
@@ -83,7 +105,7 @@
       "原生侧栏与网页同场未取得，采用独立扩展页回退",
       "预览覆盖侧栏搜索属真实产品行为；搜索另图展示",
       "历史列表无选中行样式，以V2预览按钮真实焦点关联",
-      "288px展示时列表版本小字约11–12px，低于约14px建议目标；请保留自然高度并支持原图查看，页面接入后复核"
+      "r1两张手机历史图已在真实最小字号25px下重拍；其余7成品未变。原生侧栏回退及真实焦点说明继续适用"
     ],
     "insertion_mobile": "独立取受控网页结果区，保留原文、完整插入正文及来源；浮球实际拖至取景外"
   }

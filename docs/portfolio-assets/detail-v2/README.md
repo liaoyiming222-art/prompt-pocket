@@ -19,7 +19,7 @@
 | prompt-pocket-insert-desktop.webp | 1600×1200 | 受控桌面网页真实插入结果 |
 | prompt-pocket-insert-mobile.webp | 900×1200 | 输入结果区独立局部，原文与完整提示词 |
 | prompt-pocket-history-list-desktop.webp | 1600×1200 | 三个版本，V2预览按钮实际焦点 |
-| prompt-pocket-history-list-mobile.webp | 900×1200 | 三个版本自然窄幅列表 |
+| prompt-pocket-history-list-mobile.webp | 900×1600 | 三个版本自然窄幅列表 |
 | prompt-pocket-history-preview-desktop.webp | 1600×1200 | 同一提示词V2正文查看 |
 | prompt-pocket-history-preview-mobile.webp | 900×1200 | V2标识与完整短正文独立局部 |
 
@@ -46,7 +46,7 @@
 
 九张成品尺寸、格式与 SHA-256 校验通过，原始 PNG 校验通过。检查桌面图829/1184px宽、窄屏图288/358px宽；查看完整短正文、按钮、版本标识和裁切，插入局部正文完整，未拉伸。版本列表和正文预览分开交付。
 
-窄屏真实历史列表的原生版本字号约11px，288px展示时约11–12px，低于共用规则“约14px”的建议目标；未为提高字号篡改 UI。该项作为明确限制保留，建议页面允许点开原图，接入后复核；不能将本轮图片检查称为整页手机验收通过。主视觉辅助文字由后续功能局部解释。
+首轮两张历史手机图未达到关键字号目标，已由下述 r1 替换。r1 的288/358px校样中，三版本标识、V2真实按钮焦点和对应完整正文清晰；按真实最小字号及取景宽度估算，288px下列表关键字约15.9px，预览正文约19.6px（估算为排版字号映射，非精确墨迹高度）。整页接入及真机验收仍由总控执行。主视觉辅助文字由后续功能局部解释。
 
 ## 复现
 
@@ -60,3 +60,15 @@ node docs/portfolio-assets/detail-v2/verify.mjs
 已有依赖可通过 PORTFOLIO_MODULES 指定依赖目录，浏览器通过 BROWSER_PATH 指定；默认使用标准位置 Edge。不依赖作者项目绝对路径或外站资源。make 首先验证拍摄代码与基线一致；成功后关闭并删除本次临时浏览器配置。原始截图的时间由产品实际生成，重拍时间、版本 ID 会变化。
 
 最终素材提交 SHA 由回执给出，不循环写入自身 manifest。只在独立素材分支上传，造物集接入由总控后续执行。
+
+## 有限补修 r1
+
+原任务：detail-v2-20261104-prompt-pocket；补修：detail-v2-20261104-prompt-pocket-r1。保留3fad26caa1ae3359845724d376177b41caca8929历史，沿用同一素材分支；只替换两张历史手机成品及相应原图/校样，其余7张WebP逐字节核对与原提交相同。
+
+隔离Edge156.0.4314.58配置中，通过真实浏览器Preferences的webkit.webprefs.minimum_font_size与minimum_logical_font_size设为25px，浏览器标签缩放100%，DPR2。列表使用500×1000 CSS视口，使产品原有响应式布局容纳三个版本；取真实#historySection，原图904×822，滚动区clientHeight与scrollHeight均347，三版本及V2按钮焦点完整可见。预览使用400×1000 CSS视口，真实弹窗上方连续矩形取景368×265 CSS px，原图736×530，保留完整标题、V2与短正文，省略底部操作及其余空白。没有注入或修改产品CSS、DOM文字、选择态。
+
+两图仅按宽度等比导出900px，未contain回短画布或再按高度压小；列表900×1600，预览900×1200，内容下方为一层暖白留白。放大字号的收益保留在最终图里。列表版本、焦点和预览完整正文经288/358px校样查看，无需依赖点击看大图。原有产品无选中行，以真实V2预览按钮焦点关联；主视觉的独立扩展页回退仍准确标注。
+
+r1在新临时配置重建同一虚构样本的V1/V2/V3，文字与首批相同，时间为本次真实保存时刻，不伪装为首批同一浏览器存储实例。没有执行插入、恢复或备份的新验证；原record.json保留首批操作记录，revision-r1.json单独记录补修设置、取景及校验。
+
+仅复现补修，运行node docs/portfolio-assets/detail-v2/revise-r1.mjs，再运行node docs/portfolio-assets/detail-v2/verify.mjs。make.mjs保留首轮9图复现用途，会重拍全部9图，不用于本次有限补修。

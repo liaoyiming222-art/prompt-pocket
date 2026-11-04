@@ -1,0 +1,72 @@
+{
+  "task_id": "detail-v2-20261104-prompt-pocket-r1",
+  "original_task_id": "detail-v2-20261104-prompt-pocket",
+  "code_commit": "f1216008752b1e2c2ea3b4ae582a77fd2700bc74",
+  "original_asset_commit": "3fad26caa1ae3359845724d376177b41caca8929",
+  "browser": "156.0.4314.58",
+  "settings": {
+    "minimum_font_size": 25,
+    "minimum_logical_font_size": 25,
+    "tab_zoom": 1,
+    "viewport": {
+      "width": 400,
+      "height": 1000
+    },
+    "device_scale_factor": 2
+  },
+  "captures": [
+    {
+      "path": "prompt-pocket-history-list-mobile.webp",
+      "browser_settings": {
+        "minimum_font_size": 25,
+        "minimum_logical_font_size": 25,
+        "tab_zoom": 1,
+        "viewport": {
+          "width": 500,
+          "height": 1000
+        },
+        "device_scale_factor": 2
+      },
+      "raw_width": 904,
+      "raw_height": 822,
+      "output_width": 900,
+      "output_height": 1600,
+      "method": "Width-only proportional resize to 900, no contain shrink; plain bottom space only if required",
+      "minimum_rendered_font_estimate_at_288": 15.929203539823009,
+      "clip": "actual #historySection element"
+    },
+    {
+      "path": "prompt-pocket-history-preview-mobile.webp",
+      "browser_settings": {
+        "minimum_font_size": 25,
+        "minimum_logical_font_size": 25,
+        "tab_zoom": 1,
+        "viewport": {
+          "width": 400,
+          "height": 1000
+        },
+        "device_scale_factor": 2
+      },
+      "raw_width": 736,
+      "raw_height": 530,
+      "output_width": 900,
+      "output_height": 1200,
+      "method": "Width-only proportional resize to 900, no contain shrink; plain bottom space only if required",
+      "minimum_rendered_font_estimate_at_288": 19.565217391304348,
+      "clip": {
+        "x": 16,
+        "y": 202,
+        "width": 368,
+        "height": 265
+      }
+    }
+  ],
+  "list_scroll_state": {
+    "height": 347,
+    "scrollHeight": 347
+  },
+  "other_seven_image_bytes_unchanged": true,
+  "no_product_styles_injected": true,
+  "same_v2_body_verified": true,
+  "actual_v2_focus_verified": true
+}

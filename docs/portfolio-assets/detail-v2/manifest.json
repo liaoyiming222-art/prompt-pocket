@@ -154,7 +154,7 @@
       "width": 900,
       "height": 1200,
       "format": "webp",
-      "sha256": "5c5b33cebe1e93c8a54530ef4b5d355792dbfd47ec95102f78516d684c30af42",
+      "sha256": "0f4fff70fc85d6880be69df59e974bef740cc44fbe5f6236f81cc7f9bbc0ad2c",
       "alt": "选中旧版本V2的展览介绍提示词正文预览及版本标识",
       "scene": "模块4；V2旧版查看状态，完整短样本",
       "source_type": "real-extension-page",
@@ -162,18 +162,29 @@
       "limits": "真实独立扩展页局部；不代表手机安装或原生侧栏外壳",
       "capture": {
         "path": "evidence/history-preview-mobile.png",
-        "width": 536,
-        "height": 876,
-        "sha256": "5992cbf7d47b559041fa91dd5dbd46ddc01a977a2d9577c54a48236b8cb67c68",
-        "format": "png"
+        "width": 736,
+        "height": 530,
+        "format": "png",
+        "sha256": "25c284b5ae34fead5948857d119f5f518d3be8e51ca3cdeb9324c559c8ebdffa"
+      },
+      "revision_task_id": "detail-v2-20261104-prompt-pocket-r1",
+      "browser_settings": {
+        "minimum_font_size": 25,
+        "minimum_logical_font_size": 25,
+        "tab_zoom": 1,
+        "viewport": {
+          "width": 400,
+          "height": 1000
+        },
+        "device_scale_factor": 2
       }
     },
     {
       "path": "prompt-pocket-history-list-mobile.webp",
       "width": 900,
-      "height": 1200,
+      "height": 1600,
       "format": "webp",
-      "sha256": "55d89d984edc046c4cf329d22cdc32ea42851f333959b1e0ce842239cf02f0b2",
+      "sha256": "8db957db79cd85a056894a740e358225517731ed607d7c4a416d979048c37bcf",
       "alt": "桌面管理页三个正文版本；V2预览按钮获得焦点，与旧版正文图对应",
       "scene": "模块4；真实三个版本，V2预览控制获得焦点；原产品无选中行样式",
       "source_type": "real-extension-page",
@@ -181,10 +192,21 @@
       "limits": "真实独立扩展页局部；不代表手机安装或原生侧栏外壳",
       "capture": {
         "path": "evidence/history-list-mobile.png",
-        "width": 536,
-        "height": 778,
-        "sha256": "abe1c52597ca26f6008fd2e7cce93c9f0bef93f76ea1a5cba8d5d61040582e59",
-        "format": "png"
+        "width": 904,
+        "height": 822,
+        "format": "png",
+        "sha256": "6daa45467414e5f10798e7cc56ba823175adffe118107d7f7b4f3755fca6e464"
+      },
+      "revision_task_id": "detail-v2-20261104-prompt-pocket-r1",
+      "browser_settings": {
+        "minimum_font_size": 25,
+        "minimum_logical_font_size": 25,
+        "tab_zoom": 1,
+        "viewport": {
+          "width": 500,
+          "height": 1000
+        },
+        "device_scale_factor": 2
       }
     }
   ],
@@ -252,9 +274,9 @@
     {
       "path": "evidence/check-prompt-pocket-history-list-mobile-288.png",
       "width": 288,
-      "height": 384,
+      "height": 512,
       "format": "png",
-      "sha256": "7d390233d1b5ab312752d949e875039b189896966e002f03f818dafe2088f08b",
+      "sha256": "7fbdff29008fb4007308d148c1d57306d34c1ed91a638b238a054addfe87fbe6",
       "alt": "目标展示宽度检查图：check-prompt-pocket-history-list-mobile-288.png",
       "source_type": "uniform-downscale-for-review",
       "purpose": "制作验证证据，不是额外成品"
@@ -262,9 +284,9 @@
     {
       "path": "evidence/check-prompt-pocket-history-list-mobile-358.png",
       "width": 358,
-      "height": 477,
+      "height": 636,
       "format": "png",
-      "sha256": "c061ed6cc40a84f0b136a9d58ba2cd99f8241712f2ecb206e88307f8d029573d",
+      "sha256": "c0dc0a0ade51db4a96e0267c28d0830ad3f31ab68fac3716fa74e38657dff298",
       "alt": "目标展示宽度检查图：check-prompt-pocket-history-list-mobile-358.png",
       "source_type": "uniform-downscale-for-review",
       "purpose": "制作验证证据，不是额外成品"
@@ -294,7 +316,7 @@
       "width": 288,
       "height": 384,
       "format": "png",
-      "sha256": "5c377e6f9a8aeba2ac6578192d6d0a2abbf260f87af9293c1cc6119bee9c451a",
+      "sha256": "e9e4afa59e1fe3b273884a0d360c10de456ed245c7364987cc2c12e3d05a938c",
       "alt": "目标展示宽度检查图：check-prompt-pocket-history-preview-mobile-288.png",
       "source_type": "uniform-downscale-for-review",
       "purpose": "制作验证证据，不是额外成品"
@@ -304,7 +326,7 @@
       "width": 358,
       "height": 477,
       "format": "png",
-      "sha256": "2fdebc30a9b24e6b4af3ebac766be16297bccd45fc28ec6048df10fc4a419d2a",
+      "sha256": "eba28b49816173b93331c4a9ec63fba683c176efdf163c41d128ec47469186bd",
       "alt": "目标展示宽度检查图：check-prompt-pocket-history-preview-mobile-358.png",
       "source_type": "uniform-downscale-for-review",
       "purpose": "制作验证证据，不是额外成品"
@@ -401,10 +423,10 @@
     },
     {
       "path": "evidence/history-list-mobile.png",
-      "width": 536,
-      "height": 778,
+      "width": 904,
+      "height": 822,
       "format": "png",
-      "sha256": "abe1c52597ca26f6008fd2e7cce93c9f0bef93f76ea1a5cba8d5d61040582e59",
+      "sha256": "6daa45467414e5f10798e7cc56ba823175adffe118107d7f7b4f3755fca6e464",
       "alt": "真实界面原始采集：history-list-mobile.png",
       "source_type": "capture-or-contact-sheet",
       "purpose": "制作验证证据，不是额外成品"
@@ -421,10 +443,10 @@
     },
     {
       "path": "evidence/history-preview-mobile.png",
-      "width": 536,
-      "height": 876,
+      "width": 736,
+      "height": 530,
       "format": "png",
-      "sha256": "5992cbf7d47b559041fa91dd5dbd46ddc01a977a2d9577c54a48236b8cb67c68",
+      "sha256": "25c284b5ae34fead5948857d119f5f518d3be8e51ca3cdeb9324c559c8ebdffa",
       "alt": "真实界面原始采集：history-preview-mobile.png",
       "source_type": "capture-or-contact-sheet",
       "purpose": "制作验证证据，不是额外成品"
@@ -459,5 +481,15 @@
       "source_type": "capture-or-contact-sheet",
       "purpose": "制作验证证据，不是额外成品"
     }
-  ]
+  ],
+  "revision": {
+    "task_id": "detail-v2-20261104-prompt-pocket-r1",
+    "original_task_id": "detail-v2-20261104-prompt-pocket",
+    "original_asset_commit": "3fad26caa1ae3359845724d376177b41caca8929",
+    "record": "revision-r1.json",
+    "changed_primary_images": [
+      "prompt-pocket-history-list-mobile.webp",
+      "prompt-pocket-history-preview-mobile.webp"
+    ]
+  }
 }
