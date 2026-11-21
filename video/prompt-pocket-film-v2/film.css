@@ -1,0 +1,21 @@
+#stage{background:radial-gradient(ellipse at 75% 35%,#fefbff 6%,transparent 59%),linear-gradient(140deg,#faf6f2,#eee7f6 61%,#ddd0ed)}
+.copy{top:305px}.copy h1{font-size:96px;letter-spacing:-.06em}.copy p{font-size:26px;line-height:1.65;max-width:535px}
+.mast,.foot{z-index:8}.rig,.copy{will-change:opacity}.parcel{box-shadow:0 18px 36px #5e3b7d38}
+.hero-shell{position:absolute;inset:0;z-index:7;pointer-events:none;background:radial-gradient(ellipse at 74% 40%,#fffaff 4%,transparent 57%),linear-gradient(140deg,#f9f3ee,#eee6f4 65%,#d9c7e7)}
+.hero-shell canvas{position:absolute;inset:0;width:1920px;height:1080px}
+.halo{position:absolute;right:157px;top:229px;width:697px;height:641px;border-radius:50%;background:radial-gradient(ellipse,#cbb2eb50,transparent 70%)}
+.shadow{position:absolute;right:275px;top:765px;width:465px;height:90px;border-radius:50%;background:#63448942;filter:blur(34px)}
+.hero-copy{position:absolute;left:112px;top:323px;width:800px}.hero-copy h1{font-size:106px;letter-spacing:-.054em}.hero-copy p{font-size:26px;color:#654d78;margin:0;line-height:1.65}
+.note{position:absolute;bottom:85px;left:112px;color:#694f80}
+.ghosts{position:relative;margin-top:13px;display:grid;gap:8px}
+.ghosts span{display:block;border-radius:10px;background:#efe6f7;color:#684d79;font-size:17px;padding:8px 13px}
+.search-text{letter-spacing:.055em;color:#42265a}
+.revision{position:absolute;inset:73px 391px 16px 16px;border-radius:20px;background:#fdfbf8;padding:47px 38px;transform:translateZ(7px);width:683px;height:523px}
+.revision h2{font-size:37px;margin:12px 0 18px}
+.revision-box{background:white;border:2px solid #d8c4eb;border-radius:16px;padding:23px 26px;font-size:25px;line-height:1.55;min-height:147px}
+.addition{color:#6e458f;display:inline}
+.actions{display:flex;align-items:center;justify-content:space-between;margin-top:20px;color:#694b83;font-size:17px}
+.save{color:white;background:#754da1;padding:11px 18px;border-radius:10px;font-size:19px;font-weight:700}
+.history{position:absolute;left:717px;top:96px;width:353px;height:477px;border-radius:24px;background:#f9f4ff;border:1px solid white;box-shadow:-12px 20px 44px #5f3e8631;padding:25px;transform:translateZ(34px)}
+.history h3{font-size:24px;margin:7px 0 25px}.version{background:white;border:1px solid #e5d9ee;border-radius:13px;padding:14px 13px;margin:10px 0;color:#54376d;font-size:18px}.version strong{margin-right:13px}.version.selected{background:#eee2f9;border-color:#b79bce}.status{margin-top:22px;font-size:17px;color:#6b5087}
+.card{position:relative}.peek{position:absolute;top:13px;right:13px;border:1px solid #cfb8e4;border-radius:8px;padding:3px 9px;font-size:15px;color:#674484;background:#f7edff}

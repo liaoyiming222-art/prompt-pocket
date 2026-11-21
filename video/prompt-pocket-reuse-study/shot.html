@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><title>提示词口袋 · 复用镜头</title>
+<style>
+*{box-sizing:border-box}body{margin:0;overflow:hidden;font-family:"Microsoft YaHei",sans-serif;color:#30203d}#stage{position:absolute;width:1920px;height:1080px;overflow:hidden;background:radial-gradient(ellipse at 78% 36%,#fffcff 6%,transparent 58%),linear-gradient(140deg,#faf6f2,#eee7f6 61%,#ddd0ed)}
+.mast,.foot{position:absolute;left:112px;right:112px;display:flex;align-items:center;justify-content:space-between;font-size:20px;letter-spacing:.14em;color:#654d78}.mast{top:64px}.brand{display:flex;align-items:center;gap:12px;font-size:23px;font-weight:700;letter-spacing:.06em}.brand img{width:47px}.foot{bottom:62px;border-top:1px solid #66527c45;padding-top:20px;letter-spacing:.075em}
+.copy{position:absolute;left:112px;top:335px;z-index:2}.kicker{font-size:20px;letter-spacing:.19em;color:#69498f;font-weight:700}.kicker::before{content:"";width:34px;height:2px;background:#8162ab;display:inline-block;margin:0 15px 6px 0}h1{font-size:104px;letter-spacing:-.075em;line-height:1.1;margin:28px 0 26px}.copy p{font-size:24px;color:#654d78;margin:0}
+.rig{position:absolute;left:677px;top:233px;width:1090px;height:613px;perspective:1800px;perspective-origin:54% 48%}.world{position:absolute;inset:0;transform-style:preserve-3d}
+.browser{position:absolute;inset:0;border:1px solid #fff;border-radius:31px;background:linear-gradient(148deg,#f6f0fb,#e7d9f1);box-shadow:0 61px 95px -30px #59367d60,0 8px 20px #58327020;transform:translateZ(0)}.bar{height:73px;display:flex;align-items:center;gap:23px;padding:0 24px;color:#6c5581;font-size:17px;letter-spacing:.06em}.dots{display:flex;gap:8px}.dots b{width:9px;height:9px;border-radius:50%;background:#b7a4ca}.address{border-radius:13px;background:#fff8;padding:10px 18px;flex:1}.bar img{width:33px}
+.editor{position:absolute;left:16px;top:73px;width:683px;height:523px;border-radius:20px;background:#fdfbf8;padding:60px 38px;box-shadow:0 1px 12px #452b5612;transform:translateZ(6px)}small{font-size:17px;letter-spacing:.12em;color:#6b5087}.editor h2{font-size:37px;margin:12px 0 26px;letter-spacing:-.04em}.field{position:relative;width:607px;height:205px;border:2px solid #dfd2ec;border-radius:16px;background:#fff;font-size:27px;line-height:1.52}.field.focused{border-color:#9d7bbb;box-shadow:0 0 0 5px #a78bc820}.guide,.inserted,.caret{position:absolute;left:24px;top:26px}.guide{color:#7e6b90}.inserted{padding:0 3px;margin-left:-3px;border-radius:5px}.caret{width:2px;height:32px;top:30px;background:#7653a5}.result{display:flex;align-items:center;gap:9px;margin-top:24px;font-size:19px;color:#624184}.result b{border-radius:50%;background:#ebe0f9;width:26px;height:26px;text-align:center}
+.side{position:absolute;left:717px;top:96px;width:353px;height:477px;border-radius:24px;background:#f9f4ff;border:1px solid #fff;box-shadow:-12px 20px 44px #5f3e8631,inset 0 0 0 1px #704e9413;padding:25px;transform:translateZ(33px)}.side header{display:flex;align-items:center;gap:10px;font-size:24px;font-weight:700}.side img{width:42px}.search{height:48px;border:1px solid #ded1e9;background:#fff;border-radius:12px;margin:15px 0 23px;display:flex;align-items:center;gap:11px;padding:0 13px;font-size:20px;color:#61486f}.search svg{width:19px}.side small{display:block;margin-bottom:12px}.card{background:#fff;border:1px solid #e5d9ee;border-radius:15px;padding:16px;box-shadow:0 5px 12px #54316d0c}.card strong{font-size:24px;display:block;margin-bottom:6px}.card p{color:#624d70;font-size:21px;line-height:1.5;margin:0}.card.active{border-color:#ab8bc8;box-shadow:0 5px 15px #8057ae26}.keep{font-size:17px;color:#66477e;margin-top:18px}
+.parcel,.cursor,.pulse{position:absolute;top:0;left:0;pointer-events:none}.parcel{z-index:4;white-space:nowrap;background:#f7efff;border:1px solid #bca4d8;border-radius:14px;padding:12px 16px;font-size:27px;line-height:1.52;color:#44295e;box-shadow:0 18px 36px #5e3b7d38;transform-origin:left top}.cursor{width:33px;height:38px;filter:drop-shadow(0 3px 3px #40245b44);z-index:6}.pulse{width:42px;height:42px;border:2px solid #8861b2;border-radius:50%;z-index:5}
+</style>
+<div id="stage">
+ <div class="mast"><span class="brand"><img src="../../icons/brand.svg" alt="">提示词口袋</span><span>PROMPT POCKET / REUSE</span></div>
+ <div class="copy"><div class="kicker">把已有提示词用起来</div><h1>找到，<br>就能再用</h1><p>点击已存条目，原文落在光标处</p></div>
+ <div class="rig"><div class="world" id="world">
+  <div class="browser"><div class="bar"><div class="dots"><b></b><b></b><b></b></div><div class="address">桌面浏览器</div><img src="../../icons/brand.svg" alt=""></div></div>
+  <section class="editor"><small>网页输入框</small><h2>展览文案草稿</h2><div class="field" id="field"><div class="guide" id="guide">在这里输入</div><div class="inserted" id="inserted"></div><div class="caret" id="caret"></div></div><div class="result" id="result"><b>✓</b> 已插入原文</div></section>
+  <aside class="side"><header><img src="../../icons/brand.svg" alt="">提示词口袋</header><div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="10" r="6"/><path d="m15 15 5 5"/></svg>展览</div><small>已保存</small><div class="card" id="card"><strong>展览介绍</strong><p id="source"></p></div><div class="keep" id="keep">原条目仍在口袋里</div></aside>
+ </div></div>
+ <div class="parcel" id="parcel"></div><div class="pulse" id="pulse"></div>
+ <svg class="cursor" id="cursor" viewBox="0 0 34 38" aria-hidden="true"><path d="M4 3 29 22l-12 .6-5 11.4z" fill="#382447" stroke="white" stroke-width="2.5" stroke-linejoin="round"/></svg>
+ <div class="foot"><span>桌面 Chrome / Edge 扩展</span><span>操作示意 · 虚构提示词</span></div>
+</div>
+<script>
+const by=id=>document.getElementById(id);
+const world=by('world'),field=by('field'),source=by('source'),inserted=by('inserted'),cursor=by('cursor'),pulse=by('pulse'),parcel=by('parcel'),caret=by('caret');
+for(const layer of [source,inserted,parcel])layer.append('请为虚构社区展览',document.createElement('br'),'写一段介绍');
+const clamp=value=>Math.max(0,Math.min(1,value));
+const fade=(time,start,end)=>{const progress=clamp((time-start)/(end-start));return progress*progress*(3-2*progress)};
+const mix=(from,to,weight)=>from+(to-from)*weight;
+const point=(element,dx=0,dy=0)=>{const rect=element.getBoundingClientRect();return [rect.left+dx,rect.top+dy]};
+const move=(element,x,y,other='')=>{element.style.transform=`translate(${x}px,${y}px) ${other}`};
+window.seekFrame=frame=>{
+ const time=frame/60,settle=fade(time,0,1.02),push=fade(time,1.64,3.02),finish=fade(time,3.2,4.9);
+ world.style.transform=`translate3d(${mix(35,0,settle)-24*push}px,${mix(12,0,settle)+2*finish}px,${mix(-100,0,settle)+42*push}px) rotateX(${mix(8,4,settle)-4*push}deg) rotateY(${mix(-15,-10,settle)+7*push}deg)`;
+ const focus=time>=.71,land=time>=2.68;
+ field.classList.toggle('focused',focus);by('card').classList.toggle('active',time>=1.53);
+ by('guide').style.opacity=focus?0:1;inserted.style.opacity=land?1:0;
+ inserted.style.backgroundColor=`rgba(231,215,248,${1-fade(time,2.96,3.52)})`;
+ caret.style.opacity=focus?1:0;caret.style.left=land?'158px':'24px';caret.style.top=land?'71px':'30px';
+ by('result').style.opacity=fade(time,2.77,3.12);by('keep').style.opacity=fade(time,3.04,3.62);
+ const target=point(field,28,39),pick=point(by('card'),76,34),from=point(source,-16,-12),to=point(inserted,-16,-12);
+ const start=fade(time,.12,.71),cross=fade(time,.93,1.53),leave=fade(time,1.66,2.12);
+ move(cursor,mix(mix(target[0]+157,target[0],start),pick[0],cross)+34*leave,mix(mix(target[1]+111,target[1],start),pick[1],cross)+29*leave);
+ cursor.style.opacity=fade(time,.08,.29)*(1-fade(time,1.66,1.99));
+ const click=time<1.53?.71:1.53,ring=clamp((time-click)/.29),hit=click===.71?target:pick;
+ pulse.style.opacity=time>=click?(1-ring)*.9:0;move(pulse,hit[0]-19,hit[1]-19,`scale(${.36+ring*1.42})`);
+ const flight=fade(time,1.57,2.68),arc=Math.sin(Math.PI*flight);
+ move(parcel,mix(from[0],to[0],flight),mix(from[1],to[1],flight)-112*arc,`scale(${mix(.77,1,flight)+.16*arc}) rotate(${-5*arc}deg)`);
+ parcel.style.opacity=fade(time,1.57,1.74)*(1-fade(time,2.65,2.68));
+};
+window.ready=Promise.all([document.fonts.ready,...Array.from(document.images,image=>image.decode())]).then(()=>window.seekFrame(0));
+</script></html>

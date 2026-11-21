@@ -1,0 +1,15 @@
+{
+  "name": "prompt-pocket-film-v2",
+  "version": "2.0.0",
+  "private": true,
+  "scripts": {
+    "stills": "node render.cjs --stills",
+    "render": "node render.cjs",
+    "playback": "node playback.cjs"
+  },
+  "dependencies": {
+    "esbuild": "0.25.12",
+    "playwright": "1.62.1",
+    "sharp": "0.35.5"
+  }
+}

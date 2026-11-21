@@ -1,0 +1,3 @@
+node_modules/
+stage.generated.html
+output/hero.bundle.js
